@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>NomanLifeDesk</title>
+<meta name="description" content="NomanLifeDesk - Plan Your Day. Manage Your Life. Build Your Future."/>
+<meta name="theme-color" content="#000000"/>
+<link rel="manifest" href="manifest.json"/>
+<link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png"/>
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png"/>
+<meta name="mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-title" content="LifeDesk"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="crossorigin"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+/*
+NomanLifeDesk - Plan Your Day. Manage Your Life. Build Your Future.
+Application-style dashboard theme. Data is stored in this browser (localStorage).
+*/
+:root{--bg:#000;--sf:#0a0a0c;--cd:#111114;--sf2:#1b1b20;--tx:#F5F5F7;--mu:#a1a1aa;--pr:#E8BE62;--lb:#E8BE62;--gd:#E8BE62;--ok:#31C48D;--wn:#F5A623;--er:#F06464;--bd:#27272d}
+body.light{--bg:#F3F6FD;--sf:#fff;--cd:#fff;--sf2:#E8EEFB;--tx:#17264A;--mu:#64748B;--pr:#2864D9;--lb:#2864D9;--gd:#C49435;--bd:#D5DEF2}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.5 system-ui,Segoe UI,Roboto,sans-serif}
+.hid{display:none}
+#side{position:fixed;top:0;left:0;bottom:0;width:240px;background:var(--sf);border-right:1px solid var(--bd);padding:14px 10px;overflow:auto;z-index:20;transition:transform .25s}
+#side h1{font-size:19px;margin:4px 10px 2px;color:var(--gd)}
+#side small{display:block;margin:0 10px 12px;color:var(--mu);font-size:11px}
+#side a{display:block;padding:9px 12px;margin:2px 0;border-radius:12px;color:var(--tx);text-decoration:none}
+#side a:hover{background:var(--sf2)}
+#side a.on{background:var(--sf2);box-shadow:0 0 0 1px var(--gd),0 0 14px rgba(230,184,74,.35)}
+#top{position:fixed;top:0;left:240px;right:0;height:56px;background:var(--sf);border-bottom:1px solid var(--bd);display:flex;align-items:center;gap:10px;padding:0 16px;z-index:10}
+#top .sp,.sp{flex:1}
+#top input{max-width:240px}
+#app{margin:56px 0 0 240px;padding:20px;max-width:none}
+h2{margin:0 0 14px}
+.card{background:var(--cd);box-shadow:0 8px 24px rgba(0,0,0,.16);backdrop-filter:blur(8px);transition:transform .2s,border-color .2s;min-width:0;border:1px solid var(--bd);border-radius:20px;padding:16px;margin-bottom:16px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px}
+.grid .card{margin:0}
+.card:hover{border-color:var(--pr);transform:translateY(-2px)}
+.cp .card{padding:10px;margin-bottom:10px}.cp #app{padding:12px}
+.kb{display:grid;grid-template-columns:repeat(5,minmax(190px,1fr));gap:10px}.kb .card{margin:6px 0;padding:10px}
+.sc{overflow-x:auto}.tb{width:100%;border-collapse:collapse}.tb td{padding:4px 6px;border-bottom:1px solid var(--bd);font-size:12px;text-align:center}
+.bd{font-size:11px;padding:1px 7px;border-radius:8px;background:var(--er);color:#fff}
+#app{overflow-x:hidden}a{color:var(--lb)}button:hover{filter:brightness(1.12)}h3{margin:10px 0 6px}
+input,select,textarea,button{font:inherit;color:var(--tx);background:var(--sf2);border:1px solid var(--bd);border-radius:10px;padding:8px 10px}
+textarea{width:100%;min-height:70px}
+.btn,button.pr{background:var(--pr);border-color:var(--pr);color:#fff;cursor:pointer}
+button{cursor:pointer}
+.fm{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.fm input,.fm select{flex:1;min-width:110px}
+.it{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--bd)}
+.it:last-child{border:0}
+.it .t{flex:1}.it .t b{display:block}.it.dn b{text-decoration:line-through;opacity:.55}
+.mu,.em{color:var(--mu);font-size:13px}
+.big{font-size:30px;font-weight:700;color:var(--gd)}
+.bar{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-bottom:12px}
+.chip.on{background:var(--pr);color:#fff}
+.pb{height:8px;border-radius:8px;background:var(--sf2);overflow:hidden;margin-top:6px}
+.pb i{display:block;height:100%;background:linear-gradient(90deg,var(--pr),var(--gd))}
+.rg{width:90px;height:90px}.rg circle{fill:none;stroke-width:9}.rg .bg{stroke:var(--sf2)}.rg .fg{}.rg text{fill:var(--tx);font-size:17px;font-weight:700}
+.cg{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}
+.cg button{min-height:54px;text-align:left;padding:5px;position:relative}
+.cg button.tod{border-color:var(--gd)}.cg button.sel{background:var(--pr);color:#fff}
+.cg b{font-size:11px;color:var(--mu)}
+.dot{position:absolute;right:5px;bottom:4px;font-size:11px;color:var(--gd)}
+.yg{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:12px}
+.mm{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;font-size:10px;text-align:center}
+.mm i{font-style:normal;border-radius:4px;padding:1px}.mm i.hv{background:var(--pr);color:#fff}
+.hm{display:flex;gap:3px;flex-wrap:wrap}.hm i{width:14px;transition:.2s;height:14px;border-radius:4px;background:var(--sf2)}.hm i.on{background:var(--ok)}
+.bars{display:flex;align-items:flex-end;gap:6px;height:120px}.bars div{flex:1;background:linear-gradient(var(--gd),var(--pr));border-radius:6px 6px 0 0;min-height:2px}
+.tl{display:flex;gap:10px;border-top:1px solid var(--bd);padding:6px 0;min-height:42px}.tl>span{width:60px;color:var(--mu);font-size:12px}.tl>div{flex:1}
+#bn{display:none}
+@media(max-width:900px){#side{transform:translateX(-100%)}#side.open{transform:none}#top{left:0}#app{margin-left:0;padding:14px 12px 80px}
+#bn{display:flex;position:fixed;bottom:0;left:0;right:0;background:var(--sf);border-top:1px solid var(--bd);z-index:15}
+#bn a{flex:1;text-align:center;padding:10px 2px;font-size:11px;color:var(--tx);text-decoration:none}}
+@media(min-width:901px){#mb{display:none}}
+
+body{font-family:'Plus Jakarta Sans',system-ui,Segoe UI,Roboto,sans-serif;background:radial-gradient(900px 420px at 100% -8%,rgba(232,190,98,.17),transparent 60%),radial-gradient(700px 500px at 0 0,rgba(255,255,255,.04),transparent 60%),var(--bg);background-attachment:fixed}
+h2{font-size:28px;font-weight:800;letter-spacing:-.5px}
+.card{border-radius:22px;background:linear-gradient(160deg,var(--cd),var(--sf))}
+input,select,textarea,button{border-radius:12px}
+.btn,button.pr{background:var(--gd);border-color:var(--gd);color:#14110a;font-weight:700}
+.chip.on{background:var(--gd);border-color:var(--gd);color:#14110a;font-weight:700}
+.big{color:var(--tx);font-weight:800;font-size:34px}
+.pb{height:10px;border-radius:10px}.pb i{background:linear-gradient(90deg,var(--gd),#f3d78a)}
+.rg{width:104px;height:104px}.rg circle{stroke-width:8}.rg .fg{stroke-linecap:round}
+.cg button.sel{background:var(--gd);color:#14110a;font-weight:700}.mm i.hv{background:var(--gd);color:#14110a}
+.hm i{border-radius:4px}.hm i.on{background:var(--gd)}
+#side a.on{background:var(--gd);color:#14110a;font-weight:700;box-shadow:0 8px 20px rgba(232,190,98,.35)}
+#side a{display:flex;align-items:center;font-weight:600}
+#side a i{display:inline-grid;place-items:center;width:26px;height:26px;margin-right:10px;border-radius:9px;background:var(--sf2);font-style:normal;font-size:13px}
+#side a.on i{background:rgba(0,0,0,.14)}
+.pf{display:flex;gap:10px;align-items:center;margin:6px 8px 14px}.pf small{margin:0}
+.sec{margin:8px 12px 4px;font-size:11px;letter-spacing:1px;color:var(--mu)}
+.av{display:inline-grid;place-items:center;width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--pr),var(--gd));color:#fff;font-weight:800}
+#top input{border-radius:20px;background:var(--sf2);min-width:180px}
+.bell{position:relative;text-decoration:none;font-size:18px}.bell u{position:absolute;top:0;right:-2px;width:8px;height:8px;border-radius:50%;background:var(--gd)}
+.wide{grid-column:1/-1}
+.st{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px}
+.tile{border-radius:22px;padding:16px;background:linear-gradient(160deg,var(--cd),var(--sf));border:1px solid var(--bd)}
+.tile.g{background:linear-gradient(135deg,#F4CE6E,#D8A53A);color:#14110a;border-color:transparent}
+.tile .n{font-size:38px;font-weight:800;line-height:1.1}.tile span{font-size:13px;opacity:.8}
+.bc{display:flex;align-items:flex-end;gap:6px;height:150px}.bcol{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;min-width:0}
+.trk{width:10px;height:120px;background:var(--sf2);border-radius:8px;display:flex;align-items:flex-end;overflow:hidden}.trk i{display:block;width:100%;background:linear-gradient(var(--gd),#d49b2a);border-radius:8px;min-height:3px}
+.bcol small{font-size:10px;color:var(--mu)}
+.lc{width:100%;height:130px}.lc line{stroke:var(--bd);stroke-dasharray:3 4}
+.wk{display:flex;gap:6px;margin-bottom:10px}.wk span{flex:1;text-align:center;padding:7px 2px;border-radius:14px}.wk span.on{background:var(--gd);color:#14110a;font-weight:700}.wk small{display:block;font-size:11px;opacity:.8}
+.sch{position:relative;min-width:640px}.sch .tk{display:flex;justify-content:space-between;color:var(--mu);font-size:12px;border-bottom:1px solid var(--bd);padding-bottom:6px}
+.sch .ln{position:relative;margin-top:10px}.sch .bl{position:absolute;height:40px;border-radius:12px;padding:5px 10px;font-size:12px;background:var(--sf2);border:1px solid var(--bd);overflow:hidden;white-space:nowrap;text-overflow:ellipsis;min-width:70px}
+.sch .bl small{display:block;opacity:.7}.sch .now{position:absolute;top:0;bottom:0;width:2px;background:var(--tx);opacity:.7}
+.add{display:inline-block;margin-top:8px;padding:8px 14px;border:1px dashed var(--mu);border-radius:12px;color:var(--mu);text-decoration:none}
+.gi{display:flex;gap:12px;align-items:center;margin:10px 0}.gi i{display:grid;place-items:center;width:36px;height:36px;border-radius:12px;background:var(--sf2);font-style:normal}.gi div{flex:1}
+
+#top{gap:8px;padding:0 12px}#top>*{flex:none}#top .sp{display:none}#top #gs{flex:1 1 auto;min-width:0;max-width:320px;margin-left:auto}#clk{white-space:nowrap;font-size:13px}#clk small{opacity:.7;font-weight:600}
+.av{flex:none;overflow:hidden;cursor:pointer}.av img{width:100%;height:100%;object-fit:cover;display:block}
+.bell{cursor:pointer}.bcol small{white-space:nowrap;font-size:9px;min-height:12px}.trk{width:100%;max-width:10px}.bc{gap:4px}
+.pm{position:fixed;top:62px;right:10px;width:min(330px,calc(100vw - 20px));max-height:70vh;overflow:auto;background:var(--sf);border:1px solid var(--bd);border-radius:18px;padding:12px;z-index:60;box-shadow:0 20px 50px rgba(0,0,0,.55)}
+.pm a,.pm .mi{display:block;width:100%;text-align:left;padding:9px 10px;border:0;background:none;border-radius:10px;color:var(--tx);text-decoration:none}.pm a:hover,.pm .mi:hover{background:var(--sf2)}
+.pm .hd{display:flex;gap:10px;align-items:center;padding:2px 4px 10px;border-bottom:1px solid var(--bd);margin-bottom:6px}
+.md{position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:70;display:grid;place-items:center;padding:14px}.md>div{background:var(--sf);border:1px solid var(--bd);border-radius:22px;padding:18px;width:min(460px,100%)}
+#fab{position:fixed;right:18px;bottom:22px;width:54px;height:54px;border-radius:50%;background:var(--gd);border:0;color:#14110a;font-size:30px;font-weight:800;line-height:1;padding:0;z-index:30;box-shadow:0 10px 26px rgba(232,190,98,.4)}
+.tmr{font-size:46px;font-weight:800;text-align:center;letter-spacing:2px;margin:6px 0}
+#bn a i{display:block;font-style:normal;font-size:16px}#bn a.on{color:var(--gd);font-weight:700}#bn a{text-transform:capitalize}
+@media(max-width:900px){#clk small{display:none}#fab{bottom:76px}.tile .n{font-size:30px}h2{font-size:22px}.card{padding:14px}.sch{min-width:0}.sch .tk,.sch .now{display:none}.sch .ln{height:auto!important;display:flex;flex-direction:column;gap:8px}.sch .bl{position:static!important;width:auto!important;height:auto;white-space:normal}.fm input,.fm select{min-width:90px}}
+
+/* v4 polish: forms, mobile, consistency */
+button,input,select,textarea{font-size:14px}
+button{padding:9px 14px;font-weight:600;transition:filter .15s,transform .1s}button:active{transform:scale(.97)}
+input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid var(--gd);outline-offset:1px}
+input[type=checkbox]{accent-color:var(--gd);width:18px;height:18px;padding:0;flex:none}
+.fm{gap:10px}.fm>*{min-width:0;max-width:100%}.fm+.fm{margin-top:10px}
+.fm input[type=file]{flex:1 1 200px;padding:6px;font-size:13px}
+input[type=file]::file-selector-button{background:var(--gd);color:#14110a;border:0;border-radius:8px;padding:6px 12px;font-weight:700;margin-right:10px;cursor:pointer}
+.fm input[type=color],input[type=color]{flex:none;width:46px;min-width:0;height:40px;padding:3px;cursor:pointer}
+.fm input[type=time]{flex:0 1 150px}.fm input[type=date]{flex:0 1 170px}.fm select{flex:0 1 auto;min-width:120px}
+.fm label{display:inline-flex;align-items:center;gap:8px;white-space:nowrap}
+.card>b:first-child{display:block;font-size:16px;margin-bottom:10px}
+.it{flex-wrap:wrap}.it input:not([type=checkbox]),.it select{min-width:0;flex:1 1 130px;max-width:100%}.it .t{min-width:140px}
+::-webkit-scrollbar{width:10px;height:10px}::-webkit-scrollbar-thumb{background:var(--sf2);border-radius:10px;border:2px solid transparent;background-clip:content-box}
+@media(max-width:600px){.fm input[type=time],.fm input[type=date],.fm select{flex:1 1 130px}.fm>button{flex:1 1 auto}.it>button{flex:none}.tile .n{font-size:26px}.st{grid-template-columns:1fr 1fr}}
+
+/* v5 spacing: consistent vertical rhythm between blocks */
+#app>br{display:none}
+#app>.grid,#app>.st,#app>.bar,#app>.card,#app>.tl,#app>.wk{margin-bottom:16px}
+#app>*:last-child{margin-bottom:0}
+.grid>.card,.st>.tile{margin:0}
+.card>.grid,.card>.st{margin:0}.card .grid+*,.card *+.grid{margin-top:12px}
+.card>p:last-child{margin-bottom:0}
+#lg{position:fixed;inset:0;z-index:100;background:var(--bg);display:grid;place-items:center;padding:16px}#lf,#lg>p{width:min(380px,100%)}#lf{background:var(--cd);border:1px solid var(--bd);border-radius:22px;padding:24px;display:flex;flex-direction:column;gap:12px}#lf h1{margin:0;color:var(--gd);font-size:24px}#lf p{margin:0}#lf .er{color:var(--er);font-size:13px}
+</style>
+</head>
+<body>
+<div id="side"></div>
+<div id="top"><button id="mb">&#9776;</button><b id="clk"></b><span class="sp"></span><input autocomplete="off" id="gs" placeholder="Search... (Ctrl+K)"/><button id="th" title="Theme">&#9680;</button><a class="bell" href="#/reminders" id="bl">&#128276;<u id="bu"></u></a><span class="av" id="tav">N</span></div><button id="fab" title="Quick add">+</button><div id="ov"></div>
+<div id="app">Loading NomanLifeDesk...</div>
+<div id="bn"></div>
+<script>
+(function(){
+var D,RAW=null,BAD=0;try{RAW=localStorage.getItem('nld');D=JSON.parse(RAW)||{}}catch(e){D={};BAD=1;try{if(RAW)localStorage.setItem('nld_corrupt',RAW)}catch(x){}}
+if(typeof D!=='object'||Array.isArray(D))D={};
+if(!D.v){try{if(RAW)localStorage.setItem('nld_bak1',RAW)}catch(e){}D.v=2;if(D.light&&!D.th)D.th='light'}
+function $(q){return document.querySelector(q)}
+function sv(){D.lt=Date.now();var s;try{s=JSON.stringify(D);localStorage.setItem('nld',s)}catch(e){alert('Browser storage full or blocked. Export a backup now.');return}idbSet(s);snap(s);cpush()}
+function p(n){return n<10?'0'+n:''+n}
+function K(d){return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate())}
+function E(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+function C(n){return D[n]=D[n]||[]}
+function T(){return pk().k}
+function lg(on){var a=C('log'),t=T();if(on)a.push(t);else{var i=a.lastIndexOf(t);if(i>-1)a.splice(i,1)}}
+function h12(h){return(h%12||12)+(h<12?' AM':' PM')}
+var PR=['Fajr','Dhuhr','Asr','Maghrib','Isha'],NAV=[['dashboard','Dashboard'],['calendar','Calendar & Planner'],['timeline','Daily Timeline'],['prayer','Prayer Tracker'],['quran','Quran Tracker'],['habits','Habit Tracker'],['tasks','Tasks'],['goals','Goals'],['journey','My Life Journey'],['study','Study Planner'],['finance','Finance'],['notes','Notes'],['projects','Projects'],['journal','Daily Journal'],['sleep','Sleep Tracker'],['water','Water Tracker'],['dates','Important Dates'],['docs','Documents'],['inbox','Quick Inbox'],['analytics','Analytics'],['reminders','Reminders'],['settings','Settings']];
+var M={
+tasks:{t:'Tasks & Kanban',d:1,f:[['title','Task'],['pri','Priority','s','Low,Medium,High,Urgent'],['st','Status','s','To Do,In Progress,On Hold,Review'],['date','Due','date']]},
+events:{t:'Events',f:[['title','Event'],['date','Date','date'],['time','Time','time'],['cat','Category','s','General,Study,Work,Personal,Birthday,Holiday']]},
+quran:{t:'Quran Reading',f:[['date','Date','date'],['surah','Surah / Juz'],['pages','Pages read','number'],['note','Note']]},
+goals:{t:'Goals & Milestones',d:1,pg:1,f:[['title','Goal'],['ty','Type','s','Daily,Weekly,Monthly,Quarterly,Yearly,5-Year,Lifetime'],['date','Target date','date'],['ms','Milestone']]},
+study:{t:'Study Planner',f:[['subject','Subject'],['date','Date','date'],['hours','Hours','number'],['note','Note / exam / assignment']]},
+finance:{t:'Finance Tracker',f:[['title','Description'],['ty','Type','s','Income,Expense,Saving'],['amt','Amount','number'],['date','Date','date']]},
+notes:{t:'Notes & Knowledge',f:[['title','Title'],['tag','Tag'],['text','Note','area']]},
+projects:{t:'Projects',d:1,pg:1,f:[['title','Project'],['date','Deadline','date'],['st','Status','s','Planning,Active,On Hold,Completed']]},
+reminders:{t:'Reminders',d:1,f:[['title','Reminder'],['date','Date','date'],['time','Time','time']]}};
+var cv={v:'month',d:ND(),s:null},pd=T(),td=T();
+function fld(f,first){var n=f[0],t=f[2],r=first?' required':'',h;
+if(t=='s')return'<select name="'+n+'">'+f[3].split(',').map(function(o){return'<option>'+o+'</option>'}).join('')+'</select>';
+if(t=='area')return'<textarea name="'+n+'" placeholder="'+f[1]+'"></textarea>';
+h='<input name="'+n+'" type="'+(t||'text')+'"'+(t=='date'&&f[3]=='d'?' value="'+T()+'"':'')+' placeholder="'+f[1]+'" title="'+f[1]+'"'+(t=='number'?' step="any" min="0"':'')+r+'/>';return h}
+function ring(v,l){v=Math.max(0,Math.min(100,Math.round(v)));return'<svg class="rg" viewBox="0 0 90 90"><defs><linearGradient id="rgd" x1="0" y1="0" x2="1" y2="1"><stop offset="0" style="stop-color:var(--gd)"/><stop offset="1" style="stop-color:#f7e2a4"/></linearGradient></defs><circle class="bg" cx="45" cy="45" r="36"/><circle class="fg" cx="45" cy="45" r="36" stroke="url(#rgd)" stroke-dasharray="'+(v*2.262)+' 226.2" transform="rotate(-90 45 45)"/><text x="45" y="51" text-anchor="middle">'+v+'%</text></svg><div class="mu">'+l+'</div>'}
+function item(id,a,i,m){var x=a[i],ms=m.f,meta=[];for(var j=1;j<ms.length;j++){var v=x[ms[j][0]];if(v!==''&&v!=null)meta.push(E(v))}
+if(x.hrs)meta.push(x.hrs+' h');if(id=='dates'&&x.date)meta.push('in '+cdn(x.date)+' days');var s='<div class="it'+(x.done?' dn':'')+'">'+(m.d?'<input type="checkbox" data-a="dn" data-id="'+id+'" data-i="'+i+'"'+(x.done?' checked':'')+'/>':'')+'<div class="t"><b>'+E(x[ms[0][0]])+(m.d&&!x.done&&x.date&&x.date<T()?' <span class="bd">Overdue</span>':'')+'</b><span class="mu">'+meta.join(' · ')+'</span>'+(m.pg?'<div class="pb"><i style="width:'+(x.p||0)+'%"></i></div>':'')+'</div>'+(m.pg?'<button data-a="pg" data-id="'+id+'" data-i="'+i+'">+10%</button>':'')+(id=='inbox'?'<button data-a="cvt" data-i="'+i+'">To task</button>':'')+'<button data-a="ed" data-id="'+id+'" data-i="'+i+'">Edit</button><button data-a="del" data-id="'+id+'" data-i="'+i+'">Delete</button></div>';return s}
+function gen(id){var m=M[id],a=C(id),h='<h2>'+m.t+'</h2>',i;
+if(id=='quran')h+=qst();if(id=='finance')h+=fin();if(id=='sleep')h+=slp();
+if(id=='tasks')h+='<div class="bar"><button class="chip'+(D.tv!='board'?' on':'')+'" data-a="tv" data-v="list">List</button><button class="chip'+(D.tv=='board'?' on':'')+'" data-a="tv" data-v="board">Kanban</button><select data-a="pf"><option value="">All priorities</option>'+['Low','Medium','High','Urgent'].map(function(o){return'<option'+(D.pf==o?' selected':'')+'>'+o+'</option>'}).join('')+'</select></div>';
+h+='<div class="card"><form class="fm" data-id="'+id+'">'+m.f.map(function(f,j){return fld(f,j==0)}).join('')+'<button class="btn">Add</button></form></div>';
+var q=(D.q||'').toLowerCase(),ix=[];for(i=0;i<a.length;i++){if(q&&JSON.stringify(a[i]).toLowerCase().indexOf(q)<0)continue;if(id=='tasks'&&D.pf&&a[i].pri!=D.pf)continue;ix.push(i)}
+if(m.sort)ix.sort(function(x,y){return String(a[y][m.sort]).localeCompare(String(a[x][m.sort]))});else ix.reverse();
+if(id=='tasks'&&D.tv=='board'){h+='<div class="card sc"><div class="kb">'+ST.map(function(s){var c='';ix.forEach(function(i){var x=a[i],cs=x.done?'Completed':(x.st||'To Do');if(cs==s)c+='<div class="card"><b>'+E(x.title)+'</b><div class="mu">'+E(x.pri)+(x.date?' · '+E(x.date):'')+(x.date&&x.date<T()&&s!='Completed'?' · Overdue':'')+'</div><select data-a="mv" data-i="'+i+'">'+ST.map(function(o){return'<option'+(o==s?' selected':'')+'>'+o+'</option>'}).join('')+'</select></div>'});return'<div><b>'+s+'</b>'+c+'</div>'}).join('')+'</div></div>'}
+else{var L='',yr='';ix.forEach(function(i){if(id=='journey'&&String(a[i].date).slice(0,4)!=yr){yr=String(a[i].date).slice(0,4);L+='<h3>'+E(yr)+'</h3>'}L+=item(id,a,i,m)});h+='<div class="card">'+(L||'<p class="em">Nothing here yet. Add your first entry above.</p>')+'</div>'}
+if(id=='finance'||id=='journey'||id=='journal')h+='<button data-a="'+(id=='finance'?'csv':'xp')+'" data-id="'+id+'">Export '+(id=='finance'?'CSV':'JSON')+'</button>';return h}
+function on(k){var r=[];C('events').forEach(function(e,i){if(occ(e,k))r.push({t:(e.time||'All day')+' '+e.title+(e.loc?' @ '+e.loc:''),c:e.cat+(e.rc&&e.rc!='None'?' · '+e.rc:''),ei:i})});C('dates').forEach(function(e){if(e.date&&e.date.slice(5)==k.slice(5)&&k>=e.date)r.push({t:e.title,c:e.cat})});C('tasks').forEach(function(e){if(e.date==k&&!e.done)r.push({t:'Task: '+e.title,c:e.pri})});C('reminders').forEach(function(e){if(e.date==k&&!e.done)r.push({t:(e.time||'')+' Reminder: '+e.title,c:''})});return r}
+function lst(k){var r=on(k);return r.length?r.map(function(x){return'<div class="it"><div class="t">'+E(x.t)+' <span class="mu">'+E(x.c)+'</span></div>'+(x.ei!=null?'<button data-a="del" data-id="events" data-i="'+x.ei+'">Delete</button>':'')+'</div>'}).join(''):'<p class="em">No items on this day.</p>'}
+function hj(d){try{return new Intl.DateTimeFormat('en-u-ca-islamic',{day:'numeric',month:'long',year:'numeric'}).format(d)}catch(e){return''}}
+function mon(y,m,mini){var f=new Date(y,m,1),o=(f.getDay()+6)%7,n=new Date(y,m+1,0).getDate(),h='';
+if(mini){['M','T','W','T','F','S','S'].forEach(function(x){h+='<b>'+x+'</b>'});for(var i=0;i<o;i++)h+='<i></i>';for(var d=1;d<=n;d++)h+='<i'+(on(K(new Date(y,m,d))).length?' class="hv"':'')+'>'+d+'</i>';return'<div class="mm">'+h+'</div>'}
+['Mon','Tue','Wed','Thu','Fri','Sat','Sun'].forEach(function(x){h+='<b>'+x+'</b>'});for(i=0;i<o;i++)h+='<span></span>';
+for(d=1;d<=n;d++){var k=K(new Date(y,m,d)),c=on(k).length;h+='<button data-a="sd" data-k="'+k+'" class="'+(k==T()?'tod ':'')+(k==cv.s?'sel':'')+'">'+d+(c?'<span class="dot">'+c+'</span>':'')+'</button>'}return'<div class="cg">'+h+'</div>'}
+function cal(){var d=cv.d,y=d.getFullYear(),m=d.getMonth(),v=cv.v,k=cv.s||K(d),i,V=['day','3day','week','month','year','agenda'],ti=v=='year'?y:v=='month'?d.toLocaleDateString('en-GB',{month:'long',year:'numeric'}):d.toDateString();
+var h='<h2>Calendar & Planner</h2><div class="card"><div class="bar">'+V.map(function(x){return'<button class="chip'+(v==x?' on':'')+'" data-a="cv" data-v="'+x+'">'+x+'</button>'}).join('')+'</div><div class="bar"><button data-a="cn" data-n="-1">Prev</button><b>'+ti+'</b><button data-a="cn" data-n="1">Next</button><button data-a="ct">Today</button><span class="sp"></span><button data-a="ics">Export ICS</button></div><div class="mu">Hijri: '+hj(d)+'</div><br/>';
+if(v=='month')h+=mon(y,m)+'<h3>'+new Date(k+'T00:00').toDateString()+'</h3>'+lst(k)+'<button data-a="od" data-k="'+k+'">Open full day</button>'+evf(k);
+if(v=='year'){h+='<div class="yg">';for(i=0;i<12;i++)h+='<div><b>'+new Date(y,i,1).toLocaleDateString('en-GB',{month:'long'})+'</b>'+mon(y,i,1)+'</div>';h+='</div>'}
+if(v=='week'){var w=new Date(d);w.setDate(w.getDate()-(w.getDay()+6)%7);h+='<div class="grid">';for(i=0;i<7;i++){var x=new Date(w);x.setDate(w.getDate()+i);h+=dc(x)}h+='</div>'}
+if(v=='3day'){h+='<div class="grid">';for(i=0;i<3;i++){var z=new Date(d);z.setDate(d.getDate()+i);h+=dc(z)}h+='</div>'}
+if(v=='day')h+=lst(K(d))+evf(K(d));
+if(v=='agenda'){var q=(D.q||'').toLowerCase(),n=0;for(i=0;i<60;i++){var a=new Date(d);a.setDate(d.getDate()+i);var r=on(K(a)).filter(function(u){return!q||u.t.toLowerCase().indexOf(q)>-1});if(r.length){n++;h+='<b>'+a.toDateString()+'</b>'+r.map(function(u){return'<div class="it"><div class="t">'+E(u.t)+' <span class="mu">'+E(u.c)+'</span></div></div>'}).join('')}}if(!n)h+='<p class="em">No upcoming items in the next 60 days.</p>';h+=evf()}
+return h+'</div>'}
+function tl(){var a=C('tl'),k=td,st=D.sl||30,h='<h2>Daily Timeline (24 hours)</h2><div class="card"><div class="bar"><input type="date" id="tdt" value="'+k+'"/>Slot:'+[15,30,60].map(function(z){return'<button class="chip'+(st==z?' on':'')+'" data-a="sl" data-v="'+z+'">'+z+'m</button>'}).join('')+'</div><form class="fm" data-id="tl"><input name="s" type="time" step="'+st*60+'" required="required" title="Start"/><input name="e" type="time" step="'+st*60+'" required="required" title="End"/><select name="y">'+Object.keys(TC).map(function(o){return'<option>'+o+'</option>'}).join('')+'</select><input name="title" placeholder="Activity" required="required"/><input name="k" type="hidden" value="'+k+'"/><button class="btn">Add</button></form></div>';
+var P=pk(),cur=k==P.k?P.m:(k<P.k?1440:-1),pl=0,ac=0,ms=0,ty={},L=[],i;
+a.forEach(function(x,j){if(x.k==k){var b=bm(x);L.push({x:x,j:j,s:b[0],e:b[1]})}});L.sort(function(u,v){return u.s-v.s});
+L.forEach(function(o){var d=Math.max(0,o.e-o.s);pl+=d;if(o.x.c){ac+=d;ty[o.x.y]=(ty[o.x.y]||0)+d}else if(o.e<=cur)ms+=d});
+h+='<div class="grid"><div class="card">Planned<div class="big">'+du(pl)+'</div></div><div class="card">Actual (completed)<div class="big">'+du(ac)+'</div></div><div class="card">Missed<div class="big">'+du(ms)+'</div></div><div class="card">Utilization<div class="big">'+(pl?Math.round(ac/pl*100):0)+'%</div><span class="mu">'+Object.keys(ty).map(function(o){return o+' '+du(ty[o])}).join(' · ')+'</span></div></div><br/><div class="card">';
+for(i=0;i<24;i++){h+='<div class="tl"><span>'+h12(i)+'</span><div>';L.forEach(function(o){if(Math.floor(o.s/60)==i){var x=o.x;h+='<div class="it'+(x.c?' dn':'')+'" style="border-left:4px solid '+(TC[x.y]||'#397BFF')+';padding-left:8px"><input type="checkbox" data-a="tc" data-i="'+o.j+'"'+(x.c?' checked':'')+'/><div class="t"><b>'+E(x.title)+'</b><span class="mu">'+hm(o.s)+' - '+hm(o.e)+' ('+du(o.e-o.s)+') · '+E(x.y)+(!x.c&&o.e<=cur?' · Missed':'')+'</span></div><button data-a="rs2" data-i="'+o.j+'">Reschedule</button><button data-a="del" data-id="tl" data-i="'+o.j+'">Delete</button></div>'}});h+='</div></div>'}
+return h+'</div>'}
+function pri(){var r=D.pr=D.pr||{},t=r[pd]=r[pd]||{},h='<h2>Five Daily Prayers</h2><div class="card"><input type="date" id="pdt" value="'+pd+'"/> <span class="mu">Prayers are never auto-marked. Only you confirm them.</span></div><div class="card">';
+PR.forEach(function(n,i){var x=t[i]||{};h+='<div class="it"><div class="t"><b>'+n+'</b><span class="mu">'+(D.pt&&D.pt[i]?'Time '+D.pt[i]:'Set time in Settings')+'</span></div><select data-a="ps" data-i="'+i+'"><option value="">Not recorded</option><option value="ontime"'+(x.s=='ontime'?' selected':'')+'>On time</option><option value="late"'+(x.s=='late'?' selected':'')+'>Late</option><option value="missed"'+(x.s=='missed'?' selected':'')+'>Missed</option></select><label><input type="checkbox" data-a="pj" data-i="'+i+'"'+(x.j?' checked':'')+'/> Jamaat</label><input data-a="pn" data-i="'+i+'" placeholder="Note" value="'+E(x.n||'')+'"/></div>'});
+var s=ps();h+='</div><div class="grid"><div class="card">Recorded<div class="big">'+s.rec+'</div></div><div class="card">Completed<div class="big">'+s.ok+'</div></div><div class="card">On time<div class="big">'+s.ot+'</div></div><div class="card">Late / Missed<div class="big">'+s.lt+' / '+s.ms+'</div></div><div class="card">'+ring(s.rec?s.ok/s.rec*100:0,'Lifetime consistency (recorded prayers only)')+'</div></div>';return h+pex()}
+function ps(){var s={rec:0,ok:0,ot:0,lt:0,ms:0},r=D.pr||{};for(var d in r)for(var i in r[d]){var x=r[d][i];if(!x.s)continue;s.rec++;if(x.s=='missed')s.ms++;else{s.ok++;if(x.s=='ontime')s.ot++;else s.lt++}}return s}
+function nxt(){if(!D.pt)return'Set prayer times in Settings';var P=pk();for(var i=0;i<5;i++)if(D.pt[i]&&tm(D.pt[i])>P.m){var f=tm(D.pt[i])-P.m;return PR[i]+' at '+D.pt[i]+' (in '+du(f)+')'}return'All set times have passed today'}
+function hb(){var a=C('habits'),n=0,h='<h2>Habit Tracker Pro</h2><div class="card"><form class="fm" data-id="habits"><input name="title" placeholder="New habit" required="required"/><select name="fr"><option>Daily</option><option>Weekly</option><option>Monthly</option></select><input name="cat" placeholder="Category"/><button class="btn">Add habit</button></form><label><input type="checkbox" data-a="sha"'+(D.sa?' checked':'')+'/> Show archived</label></div>';
+a.forEach(function(x,i){if(x.ar&&!D.sa)return;n++;x.days=x.days||{};var days='',w='',t=ND(),j;for(j=6;j>=0;j--){var d=new Date(t);d.setDate(t.getDate()-j);var k=K(d);w+='<label><input type="checkbox" data-a="hc" data-i="'+i+'" data-k="'+k+'"'+(x.days[k]?' checked':'')+'/> '+d.toLocaleDateString('en-GB',{weekday:'short'})+'</label> '}
+for(j=27;j>=0;j--){d=new Date(t);d.setDate(t.getDate()-j);days+='<i class="'+(x.days[K(d)]?'on':'')+'"></i>'}
+h+='<div class="card"><b>'+E(x.title)+'</b>'+(x.ar?' <span class="mu">(archived)</span>':'')+' <span class="mu">'+E(x.fr)+(x.cat?' · '+E(x.cat):'')+' · current streak '+stk(x)+' · best '+bst(x)+' · total '+Object.keys(x.days).length+'</span><div>'+w+'</div><div class="hm">'+days+'</div><span class="mu">Success: week '+pcn(x,7)+'% · month '+pcn(x,30)+'% · year '+pcn(x,365)+'% (counted since creation)</span><div><button data-a="ed" data-id="habits" data-i="'+i+'">Rename</button> <button data-a="ar" data-i="'+i+'">'+(x.ar?'Restore':'Archive')+'</button> <button data-a="del" data-id="habits" data-i="'+i+'">Delete</button></div></div>'});
+if(!n)h+='<div class="card"><p class="em">No habits yet. Create your first habit above.</p></div>';return h}
+function stk(x){var d=ND(),n=0;if(!x.days[K(d)])d.setDate(d.getDate()-1);while(x.days[K(d)]){n++;d.setDate(d.getDate()-1)}return n}
+function act(k){var n=C('log').filter(function(x){return x==k}).length+((D.fs||{})[k]||0);C('habits').forEach(function(x){if(x.days&&x.days[k])n++});var r=(D.pr||{})[k];if(r)for(var i in r)if(r[i].s&&r[i].s!='missed')n++;C('quran').forEach(function(x){if(x.date==k)n++});C('study').forEach(function(x){if(x.date==k)n++});return n}
+function bars(){var v=[],mx=1,i,d,h='<div class="bc">';for(i=13;i>=0;i--){d=ND();d.setDate(d.getDate()-i);var c=act(K(d));v.push([c,d.getDate(),i]);mx=Math.max(mx,c)}v.forEach(function(z){h+='<div class="bcol" title="'+z[0]+' actions"><div class="trk"><i style="height:'+Math.round(z[0]/mx*100)+'%"></i></div><small>'+(z[2]%2?'&nbsp;':z[1])+'</small></div>'});return h+'</div><div class="mu">Completed actions, last 14 days</div>'}
+function lc(v){var n=v.length,mx=Math.max.apply(null,v.concat([1])),W=300,H=110,pt=v.map(function(y,j){return[n>1?j*W/(n-1):W/2,H-8-y/mx*(H-26)]}),d='M'+pt[0][0]+','+pt[0][1],j,g='';for(j=1;j<n;j++){var a=pt[j-1],b=pt[j],c=(a[0]+b[0])/2;d+=' C'+c+','+a[1]+' '+c+','+b[1]+' '+b[0]+','+b[1]}for(j=0;j<4;j++)g+='<line x1="0" x2="300" y1="'+(j*34+6)+'" y2="'+(j*34+6)+'"/>';return'<svg viewBox="0 0 300 120" class="lc" preserveAspectRatio="none"><defs><linearGradient id="lg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:var(--gd);stop-opacity:.35"/><stop offset="1" style="stop-color:var(--gd);stop-opacity:0"/></linearGradient></defs>'+g+'<path d="'+d+' L'+W+','+H+' L0,'+H+'Z" fill="url(#lg)"/><path d="'+d+'" fill="none" stroke="var(--gd)" stroke-width="2.5" vector-effect="non-scaling-stroke"/>'+(n<=31?pt.map(function(q,k){return'<circle cx="'+q[0]+'" cy="'+q[1]+'" r="3" fill="var(--gd)"><title>'+v[k]+'</title></circle>'}).join(''):'')+'</svg>'}
+function tile(l,n,sb,g){return'<div class="tile'+(g?' g':'')+'"><span>'+l+'</span><div class="n">'+n+'</div><span>'+sb+'</span></div>'}
+function ws(){var t=T(),d=ND();d.setDate(d.getDate()-(d.getDay()+6)%7);var h='<div class="wk">';for(var i=0;i<7;i++){var x=new Date(d);x.setDate(d.getDate()+i);h+='<span class="'+(K(x)==t?'on':'')+'"><small>'+x.toLocaleDateString('en-GB',{weekday:'short'})+'</small><b>'+x.getDate()+'</b></span>'}return h+'</div>'}
+function sch(){var P=pk(),t=P.k,a=[],s0=360,s1=1380,r=s1-s0,ln=[],h='',i;C('tl').forEach(function(x){if(x.k==t){var b=bm(x);a.push({n:x.title,s:b[0],e:b[1],c:TC[x.y]||'#397BFF'})}});C('events').forEach(function(e){if(e.time&&occ(e,t))a.push({n:e.title,s:tm(e.time),e:tm(e.time)+60,c:'#397BFF'})});
+a.sort(function(u,v){return u.s-v.s});a.forEach(function(o){var s=Math.max(s0,Math.min(s1-30,o.s)),e=Math.max(s+30,Math.min(s1,o.e)),l=0;while(ln[l]!=null&&ln[l]>s)l++;ln[l]=e;h+='<div class="bl" style="left:'+((s-s0)/r*100)+'%;width:'+((e-s)/r*100)+'%;top:'+l*46+'px;border-left:4px solid '+o.c+'"><b>'+E(o.n)+'</b><small>'+hm(o.s)+' - '+hm(o.e)+'</small></div>'});
+var tk='';for(i=6;i<=23;i+=3)tk+='<span>'+p(i)+':00</span>';var hh=Math.max(1,ln.length)*46+4;
+return'<div class="sc"><div class="sch"><div class="tk">'+tk+'</div><div class="ln" style="height:'+hh+'px">'+h+(P.m>=s0&&P.m<=s1?'<div class="now" style="left:'+((P.m-s0)/r*100)+'%"></div>':'')+'</div></div></div>'+(a.length?'':'<p class="em">Nothing scheduled today.</p>')+'<a class="add" href="#/timeline">+ Add New</a>'}
+function dash(){var P=pk(),t=P.k,hr=Math.floor(P.m/60),g=hr<12?'Good morning':hr<18?'Good afternoon':'Good evening',nd=ND(),pc=pcnt(t),hs=C('habits').filter(function(x){return!x.ar}),hd=hs.filter(function(x){return x.days&&x.days[t]}).length,tk=C('tasks'),dn=tk.filter(function(x){return x.done}).length,qp=0,best=0,i,w={},bk=D.lb?dd(t,D.lb):null,ma=0,has=Object.keys(D).some(function(k){return Array.isArray(D[k])&&D[k].length});
+C('quran').forEach(function(x){if(x.date==t)qp+=+x.pages||0});hs.forEach(function(x){best=Math.max(best,stk(x))});for(i=1;i<=+t.slice(8);i++)ma+=act(t.slice(0,8)+p(i));
+var s=(D.pr||{})[t]||{},q=+D.qt||0,cd=function(b,w){return'<div class="card'+(w?' wide':'')+'">'+b+'</div>'},gl=C('goals').filter(function(x){return!x.done}).slice(-4).reverse();
+w.stats='<div class="st wide">'+tile('Tasks completed',dn,'of '+tk.length+' total')+tile('To-do tasks',tk.length-dn,'pending',1)+tile('Prayers today',pc+'/5','confirmed by you')+tile('Habits today',(hs.length?Math.round(hd/hs.length*100):0)+'%',hd+' of '+hs.length+' done')+'</div>';
+w.sched=cd('<h3>Today\'s Schedule</h3>'+sch(),1);
+w.goals=cd('<b>Goal progress</b>'+(gl.map(function(x){return'<div class="gi"><i>&#9678;</i><div><b>'+E(x.title)+'</b><div class="pb"><i style="width:'+(x.p||0)+'%"></i></div></div><span class="mu">'+(x.p||0)+'%</span></div>'}).join('')||'<p class="em">No active goals yet.</p>')+'<a href="#/goals">Open goals</a>');
+w.pray=cd(ring(pc/5*100,'Prayers confirmed today ('+pc+'/5)')+'<div class="mu">'+PR.map(function(n,i){var z=(s[i]||{}).s;return n.slice(0,2)+(z&&z!='missed'?' ✓':' ·')}).join('  ')+'</div><div class="mu">Next: '+E(nxt())+' · streak '+pstk()+'d</div>');
+w.habit=cd(ring(hs.length?hd/hs.length*100:0,'Habits today ('+hd+'/'+hs.length+')')+'<div class="mu">Best current streak: '+best+' days</div>');
+w.task=cd(ring(tk.length?dn/tk.length*100:0,'Tasks done ('+dn+'/'+tk.length+')')+'<div class="mu">Pending: '+(tk.length-dn)+' · <a href="#/tasks">Open</a></div>');
+w.quran=cd(ring(q?qp/q*100:0,'Quran today: '+qp+(q?' / '+q:'')+' pages')+'<a href="#/quran">Open</a>');
+w.next=cd(ws()+'<b>Next event</b><p>'+E(nev())+'</p><b>Priorities</b>'+(tk.filter(function(x){return!x.done&&(x.pri=='Urgent'||x.pri=='High')}).slice(0,4).map(function(x){return'<div>'+E(x.pri)+': '+E(x.title)+'</div>'}).join('')||'<p class="em">No high-priority tasks.</p>'));
+w.today=cd('<b>Today</b>'+lst(t));
+w.week=cd('<b>Weekly productivity</b>'+bars());
+w.mini=cd('<b>'+nd.toLocaleDateString('en-GB',{month:'long',year:'numeric'})+'</b>'+mon(nd.getFullYear(),nd.getMonth(),1));
+w.quick=cd('<b>Quick actions</b><p><a href="#/tasks">Task</a> · <a href="#/calendar">Event</a> · <a href="#/habits">Habit</a> · <a href="#/notes">Note</a> · <a href="#/inbox">Inbox</a> · <a href="#/journal">Journal</a> · <a href="#/water">Water</a></p>'+(has?'':'<p class="em">Everything starts at zero. Add items to begin tracking.</p>'));
+w.life=cd('<b>Lifetime & month</b><p>Prayers recorded: '+ps().rec+'<br/>Habit check-ins: '+C('habits').reduce(function(a,x){return a+Object.keys(x.days||{}).length},0)+'<br/>Goals done: '+C('goals').filter(function(x){return x.done}).length+'<br/>Actions this month: '+ma+'</p>');
+w.focus=fw();w.quote=qw();w.score=sw();var o=ord(),H=D.wh||[],h='<h2>'+g+', '+E(D.name||'Noman')+'</h2><p class="mu">'+nd.toDateString()+' · '+hj(nd)+'</p>';
+if(has&&(bk==null||bk>=7))h+='<div class="card">Backup reminder: '+(bk==null?'you have not exported a backup yet.':'last backup '+bk+' days ago.')+' <button data-a="ex">Export now</button></div>';
+h+='<div class="bar"><button data-a="cz">Customize dashboard</button></div>';
+if(D.cz)h+='<div class="card"><b>Widgets</b>'+o.map(function(k,j){var nm=WG.filter(function(z){return z[0]==k})[0][1];return'<div class="it"><input type="checkbox" data-a="wv" data-k="'+k+'"'+(H.indexOf(k)<0?' checked':'')+'/><div class="t">'+nm+'</div><button data-a="wm" data-i="'+j+'" data-n="-1">Up</button><button data-a="wm" data-i="'+j+'" data-n="1">Down</button></div>'}).join('')+'<label><input type="checkbox" data-a="cp"'+(D.cp?' checked':'')+'/> Compact layout</label> <button data-a="wr">Reset layout</button></div>';
+h+='<div class="grid">';o.forEach(function(k){if(H.indexOf(k)<0)h+=w[k]});return h+'</div>'}
+function ana(){var n=+D.ar||30,s=ps(),ds={},v=[],i,mx=1,sh=0,qp=0,hc=0,sc=0,st={},k;
+ function mk(x){ds[x]=1}C('log').forEach(mk);for(k in (D.pr||{}))mk(k);C('habits').forEach(function(x){for(k in x.days)mk(k)});C('quran').forEach(function(x){mk(x.date)});C('study').forEach(function(x){mk(x.date)});
+var c0=ND();c0.setDate(c0.getDate()-n+1);var f0=K(c0),pr={rec:0,ok:0};
+for(i=n-1;i>=0;i--){var d=ND();d.setDate(d.getDate()-i);var c=act(K(d));v.push(c);mx=Math.max(mx,c)}
+C('study').forEach(function(x){if(x.date>=f0)sh+=+x.hours||0;sc+=+x.hours||0});C('quran').forEach(function(x){if(x.date>=f0)qp+=+x.pages||0});C('habits').forEach(function(x){for(k in x.days)if(k>=f0)hc++});
+for(k in (D.pr||{}))if(k>=f0)for(i in D.pr[k]){var z=D.pr[k][i].s;if(z){pr.rec++;if(z!='missed')pr.ok++}}
+C('tasks').forEach(function(x){var g=x.done?'Completed':(x.st||'To Do');st[g]=(st[g]||0)+1});
+var cl=['#397BFF','#72A7FF','#F5A623','#E8BE62','#31C48D'],tot=C('tasks').length,acc=0,gr=ST.map(function(g,j){var a=acc;acc+=(st[g]||0)/(tot||1)*360;return cl[j]+' '+a+'deg '+acc+'deg'}).join(',');
+ function c2(l,x){return'<div class="card">'+l+'<div class="big">'+x+'</div></div>'}
+var pts=v.map(function(y,j){return(n>1?j*300/(n-1):0)+','+(100-y/mx*90-5)}).join(' ');
+return'<h2>Analytics Pro</h2><p class="mu">Counted only from what you recorded'+(Object.keys(ds).sort()[0]?' (first activity: '+Object.keys(ds).sort()[0]+')':'')+'.</p><div class="card"><select data-a="rg">'+[7,30,90,365].map(function(o){return'<option value="'+o+'"'+(n==o?' selected':'')+'>Last '+o+' days</option>'}).join('')+'</select></div><div class="grid">'+c2('Active days in range',v.filter(function(y){return y>0}).length)+c2('Habit check-ins',hc)+c2('Study hours',sh)+c2('Quran pages',qp)+'<div class="card">'+ring(pr.rec?pr.ok/pr.rec*100:0,'Prayer consistency in range')+'</div></div><br/><div class="grid"><div class="card"><b>Activity trend</b>'+lc(v)+'</div><div class="card"><b>Daily activity</b>'+bars()+'</div><div class="card"><b>Tasks by status</b>'+(tot?'<div style="width:110px;height:110px;border-radius:50%;background:conic-gradient('+gr+')"></div><div class="mu">'+ST.map(function(g,j){return'<span style="color:'+cl[j]+'">●</span> '+g+' '+(st[g]||0)}).join('<br/>')+'</div>':'<p class="em">No tasks yet.</p>')+'</div><div class="card"><b>Heatmap</b><div class="hm">'+v.map(function(y){return'<i style="'+(y?'background:var(--pr);opacity:'+(0.3+0.7*y/mx):'')+'"></i>'}).join('')+'</div></div></div><br/><div class="grid">'+c2('Tracked days (lifetime)',Object.keys(ds).length)+c2('Tasks completed',C('tasks').filter(function(x){return x.done}).length)+c2('Study hours (lifetime)',sc)+c2('Prayers recorded',s.rec)+c2('Goals completed',C('goals').filter(function(x){return x.done}).length)+c2('Projects completed',C('projects').filter(function(x){return x.done}).length)+'</div>'}
+function set(){var c=D.pc||{},h='<h2>Settings</h2><div class="card"><b>Profile & theme</b><div class="fm"><span class="av" style="width:64px;height:64px;font-size:26px">'+av()+'</span><input type="file" id="pic" accept="image/*"/><button data-a="pcx">Remove photo</button></div><div class="fm"><input id="bio" placeholder="Tagline / bio" value="'+E(D.bio||'')+'"/><button data-a="bio">Save bio</button></div><div class="fm"><input id="nm" placeholder="Your name" value="'+E(D.name||'')+'"/><button data-a="nm">Save name</button><select data-a="thm">'+['dark','light','system'].map(function(o){return'<option'+((D.th||'dark')==o?' selected':'')+'>'+o+'</option>'}).join('')+'</select><label>Accent <input type="color" data-a="acc" value="'+(D.ac||'#E8BE62')+'"/></label><button data-a="acr">Reset accent</button></div></div><div class="card"><b>Prayer times (24h, manual)</b><div class="fm">';
+PR.forEach(function(n,i){h+='<label>'+n+' <input type="time" data-a="pt" data-i="'+i+'" value="'+((D.pt||{})[i]||'')+'"/></label>'});
+h+='</div><div class="fm"><select data-a="pcf" data-k="m">'+['Karachi (Univ. of Islamic Sciences)','MWL','ISNA','Egyptian','Umm al-Qura'].map(function(o){return'<option'+(c.m==o?' selected':'')+'>'+o+'</option>'}).join('')+'</select><select data-a="pcf" data-k="a">'+['Hanafi','Shafi'].map(function(o){return'<option'+(c.a==o?' selected':'')+'>'+o+'</option>'}).join('')+'</select><input data-a="pcf" data-k="l" placeholder="Location" value="'+E(c.l||'Multan, Pakistan')+'"/><label><input type="checkbox" data-a="pcf" data-k="n"'+(c.n!==0?' checked':'')+'/> Prayer notifications</label></div><p class="mu">Timezone: Asia/Karachi. Method and Asr are saved as reference only. No calculation service is connected, so enter times manually from your mosque or a trusted source.</p></div><div class="card"><b>Notifications</b><p class="mu">Alerts fire only while the app is open and permission is granted.</p><button data-a="nt">Enable notifications</button></div><div class="card"><b>Backup, restore & recovery</b><p class="mu">Data lives on this device (key nld, version '+(D.v||2)+'). Use Export or the Google Drive backup below regularly, so your data is safe if the phone or PC is lost.</p><button data-a="ex">Export JSON backup</button> <input type="file" id="im" accept=".json"/> '+(localStorage.getItem('nld_bak1')?'<button data-a="br">Restore pre-upgrade snapshot</button> ':'')+'<button data-a="rs">Reset all data</button></div>'+dsf()+drv();return h}
+var NI={dashboard:'▦',calendar:'▣',timeline:'◔',prayer:'☾',quran:'❖',habits:'✔',tasks:'☰',goals:'◎',journey:'✦',study:'✎',finance:'$',notes:'✐',projects:'▤',journal:'❝',sleep:'☁',water:'◐',dates:'★',docs:'▭',inbox:'⇩',analytics:'▲',reminders:'◷',settings:'⚙'};
+var ST=['To Do','In Progress','On Hold','Review','Completed'],TC={Study:'#397BFF',Work:'#E8BE62',Prayer:'#31C48D',Rest:'#72A7FF',Personal:'#c084fc',Sleep:'#64748b',Break:'#F5A623'},WG=[['stats','Stat tiles'],['sched','Today\'s schedule'],['goals','Goal progress'],['pray','Prayers'],['habit','Habits'],['task','Tasks'],['quran','Quran'],['next','Next event & priorities'],['today','Today'],['week','Weekly productivity'],['mini','Mini calendar'],['quick','Quick actions'],['life','Lifetime & month']];
+M.tasks.f=[['title','Task'],['pri','Priority','s','Low,Medium,High,Urgent'],['st','Status','s',ST.join(',')],['date','Due','date'],['lb','Label / category']];
+M.quran.f=[['date','Date','date','d'],['surah','Surah','s',rng(114,'Surah ')],['juz','Juz','s',rng(30,'Juz ')],['ayah','Ayah range (e.g. 1-20)'],['pages','Pages read','number'],['note','Note']];
+M.study.f[1][3]='d';M.finance.f[3][3]='d';
+M.journal={t:'Daily Journal',sort:'date',f:[['date','Date','date','d'],['mood','Mood','s','Great,Good,Okay,Low,Hard'],['grat','Gratitude'],['text','Diary / reflection','area']]};
+M.sleep={t:'Sleep Tracker',sort:'date',f:[['date','Wake-up date','date','d'],['bed','Bedtime','time'],['wake','Wake-up time','time']]};
+M.dates={t:'Birthdays & Important Dates',f:[['title','Name / occasion'],['date','Original date','date'],['cat','Type','s','Birthday,Anniversary,Important date']]};
+M.docs={t:'Personal Documents',f:[['title','Document'],['cat','Category','s','ID,Education,Finance,Medical,Legal,Other'],['ref','File reference / location'],['info','Important info','area']]};
+M.inbox={t:'Quick Capture Inbox',f:[['title','Capture'],['ty','Type','s','Idea,Task,Note,Link,Reminder']]};
+M.journey={t:'My Life Journey',sort:'date',f:[['date','Date','date','d'],['title','Event'],['cat','Category','s','Life event,Achievement,Education,Skill,Project,Career,Experience,Reflection,Decision,Future plan'],['text','Details','area']]};
+function NW(){return new Date()}
+function pk(){var m=/(\d+)-(\d+)-(\d+)\D+(\d+):(\d+)/.exec(NW().toLocaleString('en-CA',{timeZone:'Asia/Karachi',hour12:false,year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'}));return{k:m[1]+'-'+m[2]+'-'+m[3],m:(+m[4]%24)*60+(+m[5])}}
+function ND(){return new Date(T()+'T00:00')}
+function rng(n,q){var a=[];for(var i=1;i<=n;i++)a.push(q+i);return a.join(',')}
+function tm(s){var q=String(s||'0:0').split(':');return(+q[0]||0)*60+(+q[1]||0)}
+function hm(m){return p(Math.floor(m/60)%24)+':'+p(m%60)}
+function du(m){return Math.floor(m/60)+'h '+(m%60)+'m'}
+function dd(a,b){return Math.round((Date.parse(a+'T00:00Z')-Date.parse(b+'T00:00Z'))/864e5)}
+function ap(){var t=D.th||'dark',l=t=='light'||(t=='system'&&window.matchMedia&&matchMedia('(prefers-color-scheme: light)').matches),b=document.body;b.classList.toggle('light',l);b.classList.toggle('cp',!!D.cp);if(D.ac)b.style.setProperty('--pr',D.ac);else b.style.removeProperty('--pr')}
+function cdn(s){var t=T(),y=+t.slice(0,4),o=y+String(s).slice(4);if(o<t)o=(y+1)+String(s).slice(4);return dd(o,t)}
+function occ(e,k){if(e.date==k)return true;if(!e.rc||e.rc=='None'||!e.date||k<e.date)return false;var f=dd(k,e.date);return e.rc=='Daily'||(e.rc=='Weekly'&&f%7==0)||(e.rc=='Monthly'&&e.date.slice(8)==k.slice(8))||(e.rc=='Yearly'&&e.date.slice(5)==k.slice(5))}
+function evf(k){return'<form class="fm" data-id="events"><input name="title" placeholder="New event" required="required"/>'+(k?'<input name="date" type="hidden" value="'+k+'"/>':'<input name="date" type="date" value="'+T()+'" required="required"/>')+'<input name="time" type="time" title="Time (empty = all day)"/><select name="cat"><option>General</option><option>Study</option><option>Work</option><option>Personal</option><option>Birthday</option><option>Anniversary</option><option>Important</option></select><select name="rc" title="Repeat"><option>None</option><option>Daily</option><option>Weekly</option><option>Monthly</option><option>Yearly</option></select><input name="loc" placeholder="Location"/><input name="ds" placeholder="Description"/><button class="btn">Add event</button></form>'}
+function dc(x){return'<div class="card"><b>'+x.toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'short'})+'</b>'+lst(K(x))+'<button data-a="od" data-k="'+K(x)+'">Open day</button></div>'}
+function ics(){var z='BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//NomanLifeDesk//EN\r\n',st=NW().toISOString().replace(/[-:]/g,'').slice(0,15)+'Z',F=function(s){return String(s||'').replace(/[\\;,]/g,function(c){return'\\'+c}).replace(/\n/g,' ')};
+C('events').forEach(function(e,i){var d=String(e.date).replace(/-/g,'');z+='BEGIN:VEVENT\r\nUID:nld'+i+'-'+d+'@nomanlifedesk\r\nDTSTAMP:'+st+'\r\n'+(e.time?'DTSTART:'+d+'T'+e.time.replace(':','')+'00\r\n':'DTSTART;VALUE=DATE:'+d+'\r\n')+'SUMMARY:'+F(e.title)+'\r\n'+(e.loc?'LOCATION:'+F(e.loc)+'\r\n':'')+(e.ds?'DESCRIPTION:'+F(e.ds)+'\r\n':'')+(e.rc&&e.rc!='None'?'RRULE:FREQ='+e.rc.toUpperCase().replace('LY','LY')+'\r\n':'')+'END:VEVENT\r\n'});dl('NomanLifeDesk.ics',z+'END:VCALENDAR\r\n','text/calendar')}
+function bm(x){return[tm(x.s||p(+x.h)+':00'),tm(x.e||p(+x.h+1)+':00')]}
+function pcnt(k){var t=(D.pr||{})[k]||{},n=0;for(var i in t)if(t[i].s&&t[i].s!='missed')n++;return n}
+function pstk(){var d=ND(),n=0;if(pcnt(K(d))<5)d.setDate(d.getDate()-1);while(pcnt(K(d))==5){n++;d.setDate(d.getDate()-1)}return n}
+function pex(){var r=D.pr||{},t=T(),h='<div class="grid">',i,j;
+[['Week',7],['Month',30],['Year',365]].forEach(function(z){var c0=new Date(ND());c0.setDate(c0.getDate()-z[1]+1);var c=K(c0),rec=0,ok=0;for(var k in r)if(k>=c)for(var q in r[k]){var s=r[k][q].s;if(s){rec++;if(s!='missed')ok++}}h+='<div class="card">'+ring(rec?ok/rec*100:0,z[0]+' consistency ('+rec+' recorded)')+'</div>'});
+h+='<div class="card">Prayer streak<div class="big">'+pstk()+'</div><span class="mu">days with all 5 confirmed</span></div></div><br/><div class="card"><b>Weekly report</b><div class="sc"><table class="tb"><tr><td></td>'+PR.map(function(n){return'<td>'+n.slice(0,3)+'</td>'}).join('')+'</tr>';
+for(j=6;j>=0;j--){var d=ND();d.setDate(d.getDate()-j);var k2=K(d),y=r[k2]||{};h+='<tr><td>'+d.toLocaleDateString('en-GB',{weekday:'short',day:'numeric'})+'</td>';for(i=0;i<5;i++){var s2=(y[i]||{}).s;h+='<td>'+(s2=='ontime'?'On time':s2=='late'?'Late':s2=='missed'?'Missed':'-')+(y[i]&&y[i].j?' (J)':'')+'</td>'}h+='</tr>'}
+h+='</table></div></div><div class="card"><b>Last 35 days</b><div class="hm">';
+for(j=34;j>=0;j--){var e=ND();e.setDate(e.getDate()-j);var c2=pcnt(K(e));h+='<i title="'+K(e)+': '+c2+'/5" style="'+(c2?'background:var(--ok);opacity:'+(0.3+c2*0.14):'')+'"></i>'}
+h+='</div></div><div class="card"><b>Qaza tracker (separate from today)</b><p class="mu">Count of missed prayers you still owe. Adjust only when you pray a Qaza.</p>';
+D.qz=D.qz||{};PR.forEach(function(n,i){h+='<div class="it"><div class="t">'+n+'</div><button data-a="qz" data-i="'+i+'" data-n="-1">-1</button><b>'+(D.qz[i]||0)+'</b><button data-a="qz" data-i="'+i+'" data-n="1">+1</button></div>'});return h+'</div>'}
+function bst(x){var k=Object.keys(x.days||{}).sort(),b=0,c=0,v=null;k.forEach(function(d){if(v&&dd(d,v)==1)c++;else c=1;if(c>b)b=c;v=d});return b}
+function pcn(x,n){var c=0,j;if(x.c)n=Math.min(n,Math.max(1,dd(T(),x.c)+1));for(j=0;j<n;j++){var d=ND();d.setDate(d.getDate()-j);if((x.days||{})[K(d)])c++}return Math.round(c/n*100)}
+function qst(){var a=C('quran'),t=T(),tot=0,wk=0,mo=0,tp=0,dy={},w=ND();w.setDate(w.getDate()-6);var w0=K(w);a.forEach(function(x){var n=+x.pages||0;tot+=n;dy[x.date]=1;if(x.date>=w0)wk+=n;if(String(x.date).slice(0,7)==t.slice(0,7))mo+=n;if(x.date==t)tp+=n});
+var d=ND(),s=0;if(!dy[K(d)])d.setDate(d.getDate()-1);while(dy[K(d)]){s++;d.setDate(d.getDate()-1)}var q=+D.qt||0;
+return'<div class="grid"><div class="card">'+ring(q?tp/q*100:0,'Today '+tp+(q?' / '+q:'')+' pages')+'<button data-a="qt">Set daily target</button></div><div class="card">'+ring(tot/604*100,'Total '+tot+' pages of 604 (cumulative)')+'</div><div class="card">This week<div class="big">'+wk+'</div><span class="mu">'+(q?'target '+q*7:'no target')+'</span></div><div class="card">This month<div class="big">'+mo+'</div><span class="mu">'+(q?'target '+q*30:'')+'</span></div><div class="card">Reading streak<div class="big">'+s+'</div><span class="mu">days. Sessions exist only when you add them.</span></div></div><br/>'}
+function fin(){var a=C('finance'),s={Income:0,Expense:0,Saving:0},mo=T().slice(0,7),me=0,i,bs=[],lb='';a.forEach(function(x){s[x.ty]+=+x.amt||0;if(x.ty=='Expense'&&String(x.date).slice(0,7)==mo)me+=+x.amt||0});
+var h='<div class="grid"><div class="card">Income<div class="big">'+s.Income+'</div></div><div class="card">Expenses<div class="big">'+s.Expense+'</div></div><div class="card">Savings<div class="big">'+s.Saving+'</div></div><div class="card">Balance<div class="big">'+(s.Income-s.Expense-s.Saving)+'</div></div></div><br/><div class="card">Monthly budget: <b>'+(D.bg||'not set')+'</b> <button data-a="bg">Set budget</button><div class="pb"><i style="width:'+(D.bg?Math.min(100,me/D.bg*100):0)+'%"></i></div><span class="mu">Spent this month: '+me+'</span></div>',mx=1;
+for(i=5;i>=0;i--){var d=ND();d.setDate(1);d.setMonth(d.getMonth()-i);var k=K(d).slice(0,7),ic=0,ex=0;a.forEach(function(x){if(String(x.date).slice(0,7)==k){if(x.ty=='Income')ic+=+x.amt||0;if(x.ty=='Expense')ex+=+x.amt||0}});bs.push([ic,ex]);mx=Math.max(mx,ic,ex);lb+='<span>'+k.slice(2)+'</span> '}
+return h+'<div class="card"><b>Income vs Expense (6 months)</b><div class="bars">'+bs.map(function(z){return'<div title="Income '+z[0]+'" style="height:'+Math.round(z[0]/mx*100)+'%;background:var(--pr)"></div><div title="Expense '+z[1]+'" style="height:'+Math.round(z[1]/mx*100)+'%"></div>'}).join('')+'</div><div class="mu">Blue = income, gold = expense. '+lb+'</div></div>'}
+function slp(){var a=C('sleep'),w=ND();w.setDate(w.getDate()-6);var w0=K(w),r=a.filter(function(x){return x.date>=w0}),t=0;r.forEach(function(x){t+=+x.hrs||0});return'<div class="card">Last 7 days: <b>'+r.length+'</b> nights recorded, average <b>'+(r.length?(t/r.length).toFixed(1):0)+' h</b></div>'}
+function wat(){var w=D.w=D.w||{},t=T(),g=w[t]||0,tg=D.wt||8,h='<h2>Water Tracker</h2><div class="card"><div class="fm">'+ring(g/tg*100,g+' / '+tg+' glasses')+'<button data-a="wa" data-n="-1">-1</button><button class="btn" data-a="wa" data-n="1">+1 glass</button><button data-a="wt">Set target</button></div></div><div class="card"><b>Last 7 days</b>';
+for(var j=6;j>=0;j--){var d=ND();d.setDate(d.getDate()-j);var k=K(d),c=w[k]||0;h+='<div class="it"><div class="t">'+d.toDateString()+'<div class="pb"><i style="width:'+Math.min(100,c/tg*100)+'%"></i></div></div><b>'+c+'</b></div>'}return h+'</div>'}
+function ord(){var o=(D.wo||[]).filter(function(k){return WG.some(function(g){return g[0]==k})});WG.forEach(function(g){if(o.indexOf(g[0])<0)o.push(g[0])});return o}
+function nev(){var P=pk();for(var j=0;j<60;j++){var d=ND();d.setDate(d.getDate()+j);var k=K(d),b=null;C('events').forEach(function(e){if(occ(e,k)&&(j>0||!e.time||tm(e.time)>=P.m)&&(!b||(e.time||'')<(b.time||'')))b=e});if(b)return(j?k:'Today')+' '+(b.time||'all day')+' - '+b.title}return'No upcoming events'}
+function mrg(o){var n=0,k,z;for(k in o){if(Array.isArray(o[k])){var a=C(k),sn={};a.forEach(function(x){sn[JSON.stringify(x)]=1});o[k].forEach(function(x){var j=JSON.stringify(x);if(!sn[j]){a.push(x);sn[j]=1;n++}})}else if(o[k]&&typeof o[k]=='object'&&D[k]&&typeof D[k]=='object'){for(z in o[k])if(D[k][z]===undefined)D[k][z]=o[k][z]}else if(D[k]===undefined)D[k]=o[k]}return n}
+function R(){var r=(location.hash||'#/dashboard').slice(2)||'dashboard',h;
+if(r=='dashboard')h=dash();else if(r=='calendar')h=cal();else if(r=='timeline')h=tl();else if(r=='prayer')h=pri();else if(r=='habits')h=hb();else if(r=='analytics')h=ana();else if(r=='settings')h=set();else if(r=='water')h=wat();else if(M[r]&&r!='events')h=gen(r);else h=dash();
+$('#app').innerHTML=h;var s='<h1>NomanLifeDesk</h1><div class="pf"><span class="av">'+av()+'</span><div><b>'+E(D.name||'Noman')+'</b><small>'+E(D.bio||'Plan. Manage. Build.')+'</small></div></div><div class="sec">MENU</div>';NAV.forEach(function(n){s+='<a href="#/'+n[0]+'" class="'+(n[0]==r?'on':'')+'"><i>'+(NI[n[0]]||'•')+'</i>'+n[1]+'</a>'});$('#side').innerHTML=s;$('#tav').innerHTML=av();$('#side').className='';
+var b='';['dashboard','calendar','prayer','tasks','habits'].forEach(function(x){b+='<a href="#/'+x+'" class="'+(x==r?'on':'')+'"><i>'+(NI[x]||'')+'</i>'+x+'</a>'});$('#bn').innerHTML=b;window.scrollTo(0,0)}
+function clk(){var N=NW(),z='Asia/Karachi';$('#clk').innerHTML='<small>'+N.toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short',timeZone:z})+'</small> '+N.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit',hour12:true,timeZone:z})}
+function ntf(t){if(!(window.Notification&&Notification.permission=='granted'))return;try{if(navigator.serviceWorker&&navigator.serviceWorker.ready){navigator.serviceWorker.ready.then(function(r){r.showNotification('NomanLifeDesk',{body:t,icon:'icons/icon-192.png'})}).catch(function(){try{new Notification('NomanLifeDesk',{body:t})}catch(x){}})}else new Notification('NomanLifeDesk',{body:t})}catch(e){}}
+function tick(){var P=pk(),k=P.k,c=hm(P.m),f=D.fired=D.fired||{};C('reminders').forEach(function(r,i){if(!r.done&&r.date==k&&r.time==c&&!f['r'+i+k]){f['r'+i+k]=1;ntf(r.title);sv()}});if(D.pt&&(D.pc||{}).n!==0)PR.forEach(function(x,i){if(D.pt[i]==c&&!f['p'+i+k]){f['p'+i+k]=1;ntf(x+' time');sv()}})}
+function dl(n,t,m){var a=document.createElement('a');a.href=URL.createObjectURL(new Blob([t],{type:m}));a.download=n;a.click()}
+document.addEventListener('submit',function(e){var f=e.target,id=f.getAttribute&&f.getAttribute('data-id');if(!id)return;e.preventDefault();var o={};new FormData(f).forEach(function(v,k){o[k]=String(v).trim()});
+if(id=='events'&&!o.date)o.date=T();
+if(id=='habits'){o.days={};o.c=T()}
+if(M[id]&&M[id].pg)o.p=0;
+if(id=='finance'&&!(+o.amt>0)){alert('Enter an amount greater than 0');return}
+if(id=='tl'){var s=tm(o.s),en=tm(o.e);if(en<=s){alert('End time must be after start time');return}var cf=C('tl').some(function(x){if(x.k!=o.k)return false;var b=bm(x);return s<b[1]&&en>b[0]});if(cf&&!confirm('This overlaps another activity. Add anyway?'))return}
+if(id=='sleep')o.hrs=(((tm(o.wake)-tm(o.bed)+1440)%1440)/60).toFixed(1);
+if(id=='tasks')o.done=o.st=='Completed';
+var js=JSON.stringify(o);if(C(id).some(function(x){return JSON.stringify(x)==js})){alert('This entry already exists');return}
+C(id).push(o);if(o.done)lg(1);sv();R()});
+document.addEventListener('click',function(e){var t=e.target,a=t.getAttribute&&t.getAttribute('data-a');if(t.id=='mb'){$('#side').classList.toggle('open');return}if(t.id=='th')a='th2';if(!a)return;
+var g=function(n){return t.getAttribute('data-'+n)},id=g('id'),i=+g('i'),x,v;
+switch(a){
+case'dn':x=C(id)[i];x.done=t.checked;if(id=='tasks')x.st=t.checked?'Completed':(x.st=='Completed'?'To Do':x.st);lg(t.checked);sv();R();break;
+case'del':if(confirm(id=='habits'?'Delete this habit AND its history? (Archive keeps history)':'Delete this item?')){C(id).splice(i,1);sv();R()}break;
+case'ed':x=C(id)[i];v=M[id]?M[id].f[0][0]:'title';var nv=prompt('Edit',x[v]);if(nv&&nv.trim()){x[v]=nv.trim();sv();R()}break;
+case'ar':x=C('habits')[i];x.ar=x.ar?0:1;sv();R();break;
+case'sha':D.sa=t.checked?1:0;sv();R();break;
+case'pg':x=C(id)[i];x.p=Math.min(100,(x.p||0)+10);if(x.p==100&&!x.done){x.done=1;lg(1)}sv();R();break;
+case'tc':C('tl')[i].c=t.checked;sv();R();break;
+case'rs2':x=C('tl')[i];var b=bm(x),ns=prompt('New start (HH:MM)',hm(b[0])),ne=ns&&prompt('New end (HH:MM)',hm(b[1]));if(ns&&ne&&/^\d{1,2}:\d{2}$/.test(ns)&&/^\d{1,2}:\d{2}$/.test(ne)&&tm(ne)>tm(ns)){x.s=hm(tm(ns));x.e=hm(tm(ne));sv();R()}else if(ns)alert('Invalid times');break;
+case'sl':D.sl=+g('v');sv();R();break;
+case'hc':x=C('habits')[i];v=g('k');if(t.checked)x.days[v]=1;else delete x.days[v];sv();R();break;
+case'pj':x=D.pr[pd][i]=D.pr[pd][i]||{};x.j=t.checked;sv();break;
+case'qz':D.qz=D.qz||{};D.qz[i]=Math.max(0,(D.qz[i]||0)+(+g('n')));sv();R();break;
+case'cv':cv.v=g('v');R();break;
+case'ct':cv.d=ND();cv.s=null;R();break;
+case'cn':var n=+g('n'),d=cv.d;if(cv.v=='day')d.setDate(d.getDate()+n);else if(cv.v=='3day')d.setDate(d.getDate()+3*n);else if(cv.v=='week')d.setDate(d.getDate()+7*n);else if(cv.v=='agenda')d.setDate(d.getDate()+30*n);else if(cv.v=='month'){d.setDate(1);d.setMonth(d.getMonth()+n)}else d.setFullYear(d.getFullYear()+n);cv.s=null;R();break;
+case'sd':cv.s=g('k');R();break;
+case'od':cv.d=new Date(g('k')+'T00:00');cv.v='day';cv.s=null;R();break;
+case'ics':ics();break;
+case'tv':D.tv=g('v');sv();R();break;
+case'cvt':x=C('inbox')[i];C('tasks').push({title:x.title,pri:'Medium',st:'To Do',date:'',lb:'From inbox',done:false});C('inbox').splice(i,1);sv();R();break;
+case'wa':D.w=D.w||{};D.w[T()]=Math.max(0,(D.w[T()]||0)+(+g('n')));sv();R();break;
+case'wt':v=parseInt(prompt('Daily water target (glasses)',D.wt||8),10);if(v>0){D.wt=v;sv();R()}break;
+case'bg':v=parseFloat(prompt('Monthly budget',D.bg||''));if(v>0){D.bg=v;sv();R()}break;
+case'qt':v=prompt('Daily Quran target (pages)',D.qt||'');if(v!==null&&(+v>=0)){D.qt=+v;sv();R()}break;
+case'csv':var z='Description,Type,Amount,Date\n';C('finance').forEach(function(r){z+='"'+String(r.title).replace(/"/g,'""')+'",'+r.ty+','+r.amt+','+r.date+'\n'});dl('finance.csv',z,'text/csv');break;
+case'xp':dl(id+'.json',JSON.stringify(C(id),null,1),'application/json');break;
+case'cz':D.cz=D.cz?0:1;R();break;
+case'wv':v=g('k');D.wh=D.wh||[];var q=D.wh.indexOf(v);if(t.checked&&q>-1)D.wh.splice(q,1);if(!t.checked&&q<0)D.wh.push(v);sv();R();break;
+case'wm':var o=ord(),j=+g('n')+i;if(j>=0&&j<o.length){v=o[i];o[i]=o[j];o[j]=v;D.wo=o;sv();R()}break;
+case'wr':D.wo=null;D.wh=[];D.cp=0;sv();ap();R();break;
+case'cp':D.cp=t.checked?1:0;sv();ap();break;
+case'nm':D.name=$('#nm').value;sv();R();break;
+case'th2':D.th={dark:'light',light:'system'}[D.th||'dark']||'dark';sv();ap();break;
+case'acr':D.ac=null;sv();ap();break;
+case'nt':if(window.Notification)Notification.requestPermission();else alert('Not supported in this browser');break;
+case'ex':D.lb=T();sv();dl('NomanLifeDesk-backup-'+T()+'.json',JSON.stringify(D),'application/json');break;
+case'br':v=localStorage.getItem('nld_bak1');if(v&&confirm('Replace current data with the snapshot taken before the upgrade?')){try{D=JSON.parse(v);D.v=2;if(D.light&&!D.th)D.th='light';sv();ap();R()}catch(x2){alert('Snapshot is damaged')}}break;
+case'rs':if(confirm('Erase ALL NomanLifeDesk data in this browser? Export a backup first.')){try{localStorage.setItem('nld_bak_reset',JSON.stringify(D))}catch(x3){}D={v:2};sv();ap();R()}break}});
+document.addEventListener('change',function(e){var t=e.target,a=t.getAttribute&&t.getAttribute('data-a'),i=t.getAttribute&&t.getAttribute('data-i');
+if(t.id=='pdt'){pd=t.value||T();R()}else if(t.id=='tdt'){td=t.value||T();R()}
+else if(t.id=='im'){var f=t.files[0];if(f){var r=new FileReader();r.onload=function(){try{var o=JSON.parse(r.result);if(!o||typeof o!='object'||Array.isArray(o))throw 0;try{localStorage.setItem('nld_bak_import',JSON.stringify(D))}catch(x){}
+if(confirm('Merge this backup into your current data? Duplicates are skipped.\nPress Cancel to choose Replace instead.')){var n=mrg(o);sv();ap();R();alert(n+' new records merged')}else if(confirm('REPLACE all current data with this backup?')){D=o;D.v=2;sv();ap();R()}}catch(x){alert('Invalid backup file. Nothing was changed.')}};r.readAsText(f)}t.value=''}
+else if(a=='ps'){var s=D.pr[pd][i]=D.pr[pd][i]||{};s.s=t.value;sv();R()}
+else if(a=='pt'){D.pt=D.pt||{};D.pt[i]=t.value;sv()}
+else if(a=='mv'){var x=C('tasks')[i],was=x.done;x.st=t.value;x.done=t.value=='Completed';if(was!=x.done)lg(x.done);sv();R()}
+else if(a=='pf'){D.pf=t.value;sv();R()}
+else if(a=='rg'){D.ar=+t.value;sv();R()}
+else if(a=='thm'){D.th=t.value;sv();ap()}
+else if(a=='acc'){D.ac=t.value;sv();ap()}
+else if(a=='pcf'){D.pc=D.pc||{};D.pc[t.getAttribute('data-k')]=t.type=='checkbox'?(t.checked?1:0):t.value;sv()}});
+document.addEventListener('input',function(e){var t=e.target,a=t.getAttribute&&t.getAttribute('data-a');if(a=='pn'){var s=D.pr[pd][+t.getAttribute('data-i')]=D.pr[pd][+t.getAttribute('data-i')]||{};s.n=t.value;sv()}if(t.id=='gs'){D.q=t.value;var r=(location.hash||'#/dashboard').slice(2);if(r=='calendar'||(M[r]&&r!='events'))R()}});
+document.addEventListener('keydown',function(e){if((e.ctrlKey||e.metaKey)&&e.key=='k'){e.preventDefault();$('#gs').focus()}});
+window.addEventListener('hashchange',R);
+
+/* ===== CLOUD LOGIN + SYNC (Firebase). Paste your Firebase web config below. Leave apiKey empty to stay local-only. ===== */
+var FBC={apiKey:'',authDomain:'',projectId:'',appId:''},FB={u:null,ok:0,t:null,st:'waiting'};
+function ldfb(cb){if(window.firebase)return cb();var u=['app','auth','firestore'],i=0;(function n(){if(i==3)return cb();var q=document.createElement('script');q.src='https://www.gstatic.com/firebasejs/10.12.2/firebase-'+u[i++]+'-compat.js';q.onload=n;q.onerror=function(){lgn('Could not load the sign-in service. Check your internet and refresh.',1)};document.head.appendChild(q)})()}
+function emp(o){return!Object.keys(o).some(function(k){return Array.isArray(o[k])&&o[k].length})}
+function lsv(){try{var s=JSON.stringify(D);localStorage.setItem('nld',s);idbSet(s)}catch(e){}}
+function lgn(m,nf){var g=$('#lg');if(!g){g=document.createElement('div');g.id='lg';document.body.appendChild(g)}g.innerHTML=nf?'<p class="mu">'+E(m)+'</p>':'<form id="lf"><h1>NomanLifeDesk</h1><p class="mu">Sign in to open your private dashboard</p>'+(m?'<p class="er">'+E(m)+'</p>':'')+'<input name="e" type="email" placeholder="Email" autocomplete="username" required="required"/><input name="p" type="password" placeholder="Password" autocomplete="current-password" required="required"/><button class="btn">Sign in</button></form>'}
+function cst(){return FBC.apiKey?'Cloud sync: '+(FB.u?'signed in as '+E(FB.u.email)+' · '+FB.st:'not signed in'):'Cloud sync is off (data stays only in this browser).'}
+function cpush(f){if(!FB.ok||!FB.r)return;clearTimeout(FB.t);FB.t=setTimeout(function(){var s=JSON.stringify(D);if(s.length>9e5){FB.st='data too large for cloud (remove the profile photo or old data)';return}FB.r.set({d:s,lt:D.lt||Date.now()}).then(function(){FB.st='synced '+new Date().toLocaleTimeString()}).catch(function(e){FB.st='sync failed: '+e.message})},f?0:1200)}
+function cinit(){if(!FBC.apiKey)return;lgn('Loading...',1);ldfb(function(){firebase.initializeApp(FBC);FB.a=firebase.auth();var db=firebase.firestore();FB.a.onAuthStateChanged(function(u){FB.u=u;if(!u){FB.ok=0;if(FB.un){FB.un();FB.un=null}lgn();return}
+var ref=db.collection('users').doc(u.uid);FB.r=ref;ref.get().then(function(s){var cd=null;try{cd=s.exists?JSON.parse(s.data().d):null}catch(e){}
+if(cd&&(emp(D)||(cd.lt||0)>(D.lt||0))){D=cd;D.v=2;lsv()}FB.ok=1;var g=$('#lg');if(g)g.remove();ap();R();bdg();if(!cd||(D.lt||0)>(cd.lt||0))cpush(1);else FB.st='synced';
+FB.un=ref.onSnapshot(function(s2){if(s2.metadata.hasPendingWrites||!s2.exists)return;try{var o=JSON.parse(s2.data().d);if((o.lt||0)>(D.lt||0)){D=o;lsv();ap();R()}}catch(e){}})}).catch(function(e){lgn('Cloud error: '+e.message)})})})}
+document.addEventListener('submit',function(e){if(e.target.id!='lf'||!FB.a)return;e.preventDefault();var f=new FormData(e.target);FB.a.signInWithEmailAndPassword(String(f.get('e')).trim(),String(f.get('p'))).catch(function(x){lgn(/invalid|wrong|not-found/.test(x.code||'')?'Wrong email or password':x.message)})});
+document.addEventListener('click',function(e){var t=e.target;if(!(t.getAttribute&&t.getAttribute('data-a')=='so')||!FB.a||!FB.r)return;if(confirm('Sign out? Your data stays safe in the cloud, and this browser\'s local copy will be cleared.'))FB.r.set({d:JSON.stringify(D),lt:D.lt||Date.now()}).then(function(){try{localStorage.removeItem('nld');localStorage.removeItem('nld_sd')}catch(x){}try{indexedDB.deleteDatabase('nldb')}catch(x){}FB.a.signOut().then(function(){location.reload()})}).catch(function(x){alert('Could not sync to the cloud, so you were not signed out: '+x.message)})});
+var ov=$('#ov'),SN=[],PS=null,FT={d:25,r:0,e:0,l:1500};
+var QT=[['Small steps every day build a big future.','روزانہ چھوٹے قدم بڑا مستقبل بناتے ہیں۔'],['Consistency beats motivation.','تسلسل جذبے سے زیادہ طاقتور ہے۔'],['Learn today, lead tomorrow.','آج سیکھو، کل رہنمائی کرو۔'],['Make your time count.','اپنے وقت کو قیمتی بناؤ۔'],['Work hard in silence, let success make the noise.','خاموشی سے محنت کرو، کامیابی شور مچائے گی۔'],['Start where you are, use what you have.','جہاں ہو وہیں سے شروع کرو۔'],['Discipline is the bridge between goals and results.','نظم و ضبط مقصد اور نتیجے کے درمیان پل ہے۔'],['Be better than you were yesterday.','کل سے بہتر بنو۔']];
+var QA={Task:['tasks',function(s){return{title:s,pri:'Medium',st:'To Do',date:'',lb:'',done:false}}],Event:['events',function(s){return{title:s,date:T(),time:'',cat:'General',rc:'None',loc:'',ds:''}}],Note:['notes',function(s){return{title:s,tag:'',text:''}}],Inbox:['inbox',function(s){return{title:s,ty:'Idea'}}],Reminder:['reminders',function(s){return{title:s,date:T(),time:''}}],Expense:['finance',function(s,n){return{title:s,ty:'Expense',amt:String(n),date:T()}}]};
+WG.push(['focus','Focus timer'],['score','Life score'],['quote','Daily motivation']);
+function av(){return D.pic?'<img src="'+D.pic+'" alt=""/>':E((D.name||'N')[0])}
+function idb(f){try{var q=indexedDB.open('nldb',1);q.onupgradeneeded=function(){q.result.createObjectStore('k')};q.onsuccess=function(){try{f(q.result)}catch(e){}}}catch(e){}}
+function idbSet(s){idb(function(d){d.transaction('k','readwrite').objectStore('k').put(s,'nld')})}
+function snap(s){var n=Date.now(),dn=Math.floor(n/864e5);if(+localStorage.getItem('nld_sd')==dn||s.length<20)return;try{localStorage.setItem('nld_sd',dn)}catch(e){}var k=dn%5;SN[k]={t:n,d:s};idb(function(d){d.transaction('k','readwrite').objectStore('k').put({t:n,d:s},'snap'+k)})}
+function loadSn(){idb(function(d){var o=d.transaction('k').objectStore('k');for(var i=0;i<5;i++)(function(i){var r=o.get('snap'+i);r.onsuccess=function(){if(r.result)SN[i]=r.result}})(i)})}
+function rcv(){if(RAW&&!BAD)return;idb(function(d){var r=d.transaction('k').objectStore('k').get('nld');r.onsuccess=function(){if(r.result&&r.result.length>20)try{var o=JSON.parse(r.result);if(o&&typeof o=='object'&&!Array.isArray(o)&&confirm('Your data was missing in this browser, but a saved backup copy was found. Restore it now?')){D=o;D.v=2;sv();ap();R()}}catch(e){}}})}
+function dsf(){var h='<div class="card"><b>Data safety</b><p class="mu">'+cst()+'</p><p class="mu">Last saved: '+(D.lt?new Date(D.lt).toLocaleString():'-')+' · Size: '+(JSON.stringify(D).length/1024).toFixed(0)+' KB · Protected storage: '+(PS?'granted':'not granted (browser may clear data when space is low)')+'. Every save is mirrored to a second store (IndexedDB) and auto-restored if the main copy goes missing. A daily snapshot is kept for 5 days.</p>';SN.forEach(function(z,i){if(z)h+='<div class="it"><div class="t">'+new Date(z.t).toLocaleString()+'</div><button data-a="snr" data-i="'+i+'">Restore</button></div>'});return h+'<p class="mu">Tip: always use the installed app (or the same web address). Private/incognito windows and other addresses have separate storage.</p></div>'}
+function pm(h){ov.innerHTML='<div class="pm">'+h+'</div>'}
+function nts(){var t=T(),r=[],P=pk(),b=D.lb?dd(t,D.lb):null;C('tasks').forEach(function(x){if(x.done||!x.date)return;if(x.date<t)r.push(['Overdue task: '+x.title,'#/tasks']);else if(x.date==t)r.push(['Due today: '+x.title,'#/tasks'])});C('reminders').forEach(function(x){if(!x.done&&x.date==t)r.push(['Reminder '+(x.time||'')+': '+x.title,'#/reminders'])});C('events').forEach(function(e){if(occ(e,t))r.push(['Event '+(e.time||'all day')+': '+e.title,'#/calendar'])});if(Object.keys(D).some(function(k){return Array.isArray(D[k])&&D[k].length})&&(b==null||b>=7))r.push(['Backup recommended','#/settings']);if(!pcnt(t)&&P.m>720)r.push(['No prayer recorded yet today','#/prayer']);return r}
+function bdg(){$('#bu').style.display=nts().length?'':'none'}
+function srch(q){q=q.toLowerCase();var r=[],S=[['tasks','Task'],['events','Event'],['notes','Note'],['goals','Goal'],['projects','Project'],['journal','Journal'],['finance','Finance'],['docs','Document'],['inbox','Inbox'],['reminders','Reminder'],['habits','Habit'],['journey','Journey'],['study','Study'],['dates','Date']];S.forEach(function(s){C(s[0]).forEach(function(x){if(JSON.stringify(x).toLowerCase().indexOf(q)>-1)r.push([s[1],String(x.title||x.subject||x.text||'').slice(0,60),'#/'+(s[0]=='events'?'calendar':s[0])])})});NAV.forEach(function(n){if(n[1].toLowerCase().indexOf(q)>-1)r.push(['Go to',n[1],'#/'+n[0]])});return r.slice(0,12)}
+function qa(){ov.innerHTML='<div class="md"><div><b>Quick add</b><form id="qa" class="fm" style="margin-top:10px"><select name="ty">'+Object.keys(QA).map(function(k){return'<option>'+k+'</option>'}).join('')+'</select><input name="t" placeholder="What?" required="required"/><input name="n" type="number" step="any" min="0" placeholder="Amount (Expense)"/><button class="btn">Add</button><button type="button" data-a="qx">Cancel</button></form></div></div>';setTimeout(function(){var i=$('#qa input');if(i)i.focus()},50)}
+function mmss(s){return p(Math.floor(s/60))+':'+p(s%60)}
+function ftu(){var x=$('#ftm'),b=$('#ftb');if(x)x.textContent=mmss(FT.l);if(b)b.textContent=FT.r?'Pause':'Start'}
+function ftg(){if(FT.r){FT.r=0;FT.l=Math.max(0,Math.round((FT.e-Date.now())/1e3))}else{FT.r=1;FT.e=Date.now()+FT.l*1e3}ftu()}
+function fw(){return'<div class="card"><b>Focus timer</b><div class="tmr" id="ftm">'+mmss(FT.l)+'</div><div class="fm"><button class="btn" id="ftb" data-a="fts">'+(FT.r?'Pause':'Start')+'</button><button data-a="ftr">Reset</button><select data-a="ftd">'+[15,25,50].map(function(m){return'<option'+(FT.d==m?' selected':'')+'>'+m+'</option>'}).join('')+'</select></div><span class="mu">Focus sessions today: '+((D.fs||{})[T()]||0)+'</span></div>'}
+function qw(){var d=ND(),q=QT[Math.floor((d-new Date(d.getFullYear(),0,0))/864e5)%QT.length];return'<div class="card"><b>Daily motivation</b><p>'+q[0]+'</p><p dir="rtl" style="font-size:18px">'+q[1]+'</p></div>'}
+function sw(){var t=T(),hs=C('habits').filter(function(x){return!x.ar}),hd=hs.filter(function(x){return x.days&&x.days[t]}).length,a=[pcnt(t)/5,Math.min(1,((D.w||{})[t]||0)/(D.wt||8)),Math.min(1,((D.fs||{})[t]||0)/4)];if(hs.length)a.push(hd/hs.length);return'<div class="card">'+ring(a.reduce(function(x,y){return x+y},0)/a.length*100,'Life score today')+'<div class="mu">Prayers · Water · Focus'+(hs.length?' · Habits':'')+'</div></div>'}
+setInterval(function(){if(!FT.r)return;FT.l=Math.max(0,Math.round((FT.e-Date.now())/1e3));ftu();if(!FT.l){FT.r=0;D.fs=D.fs||{};D.fs[T()]=(D.fs[T()]||0)+1;sv();ntf('Focus session complete. Take a short break!');FT.l=FT.d*60;ftu();if(navigator.vibrate)navigator.vibrate(300);if(!location.hash||location.hash=='#/dashboard')R()}},500);
+document.addEventListener('click',function(e){var t=e.target,a=t.getAttribute&&t.getAttribute('data-a'),c=function(q){return t.closest?t.closest(q):null};
+if(c('#bl')){e.preventDefault();var n=nts();pm('<b>Notifications</b>'+(n.length?n.map(function(z){return'<a href="'+z[1]+'">'+E(z[0])+'</a>'}).join(''):'<p class="em">All caught up.</p>'));return}
+if(c('#tav')){pm('<div class="hd"><span class="av" style="width:46px;height:46px">'+av()+'</span><div><b>'+E(D.name||'Noman')+'</b><div class="mu">'+E(D.bio||'Learn • Create • Grow')+'</div></div></div><a href="#/settings">Profile & settings</a><a href="#/analytics">Analytics</a><button class="mi" data-a="th2">Switch theme</button><button class="mi" data-a="ex">Export backup</button>'+(FBC.apiKey?'<button class="mi" data-a="so">Sign out</button>':''));return}
+if(c('#fab')){qa();return}
+if(!c('.pm')&&!c('.md>div')&&!c('#gs'))ov.innerHTML='';else if(c('.pm a'))setTimeout(function(){ov.innerHTML=''},0);
+if(!c('#side')&&!c('#mb'))$('#side').classList.remove('open');
+if(a=='qx')ov.innerHTML='';
+else if(a=='pcx'){D.pic=null;sv();R()}
+else if(a=='bio'){D.bio=$('#bio').value.trim();sv();R()}
+else if(a=='fts')ftg();
+else if(a=='ftr'){FT.r=0;FT.l=FT.d*60;ftu()}
+else if(a=='snr'){var z=SN[+t.getAttribute('data-i')];if(z&&confirm('Restore the snapshot from '+new Date(z.t).toLocaleString()+'? Current data will be replaced.')){try{D=JSON.parse(z.d);sv();ap();R()}catch(x){alert('Snapshot is damaged')}}}});
+document.addEventListener('change',function(e){var t=e.target,a=t.getAttribute&&t.getAttribute('data-a');
+if(a=='ftd'){FT.d=+t.value;if(!FT.r){FT.l=FT.d*60;ftu()}}
+if(t.id=='pic'){var f=t.files[0];if(f){var im=new Image(),u=URL.createObjectURL(f);im.onload=function(){var cv2=document.createElement('canvas'),m=Math.min(im.width,im.height);cv2.width=cv2.height=256;cv2.getContext('2d').drawImage(im,(im.width-m)/2,(im.height-m)/2,m,m,0,0,256,256);D.pic=cv2.toDataURL('image/jpeg',.85);URL.revokeObjectURL(u);sv();R()};im.onerror=function(){alert('This file is not a valid image')};im.src=u}t.value=''}});
+document.addEventListener('submit',function(e){if(e.target.id!='qa')return;e.preventDefault();var f=new FormData(e.target),ty=f.get('ty'),q=QA[ty],s=String(f.get('t')).trim(),n=+f.get('n');if(!q||!s)return;if(ty=='Expense'&&!(n>0)){alert('Enter an amount greater than 0');return}C(q[0]).push(q[1](s,n));sv();ov.innerHTML='';R()});
+document.addEventListener('input',function(e){if(e.target.id!='gs')return;var q=e.target.value.trim();if(q.length<2){ov.innerHTML='';return}var r=srch(q);pm(r.length?r.map(function(z){return'<a href="'+z[2]+'"><b>'+E(z[0])+'</b> · '+E(z[1])+'</a>'}).join(''):'<p class="em">No results</p>')});
+document.addEventListener('keydown',function(e){if(e.key=='Escape')ov.innerHTML=''});
+window.addEventListener('storage',function(e){if(e.key=='nld'&&e.newValue){try{D=JSON.parse(e.newValue);ap();R()}catch(x){}}});
+window.addEventListener('hashchange',function(){ov.innerHTML='';bdg()});
+
+/* ===== GOOGLE DRIVE BACKUP (private appDataFolder, no ads) =====
+   Paste your Google OAuth Client ID below (see README). Leave empty to keep Drive backup off. */
+var GDC={clientId:''};
+var GD={tok:null,exp:0,cl:null,st:'',cb:null,inst:null},GF='nomanlifedesk-backup.json',GS='https://www.googleapis.com/auth/drive.appdata';
+function gdmsg(m){GD.st=m;var e=$('#gdst');if(e)e.textContent=m}
+function gdlib(cb){if(window.google&&google.accounts&&google.accounts.oauth2)return cb();var q=document.createElement('script');q.src='https://accounts.google.com/gsi/client';q.onload=cb;q.onerror=function(){gdmsg('Could not load Google sign-in. Check your internet.')};document.head.appendChild(q)}
+function gdtok(silent,cb){
+if(!GDC.clientId){gdmsg('Drive backup is off. Add your Client ID in index.html (GDC.clientId).');return}
+if(GD.tok&&Date.now()<GD.exp-60000)return cb(GD.tok);
+gdlib(function(){if(!GD.cl)GD.cl=google.accounts.oauth2.initTokenClient({client_id:GDC.clientId,scope:GS,
+callback:function(r){if(r&&r.access_token){GD.tok=r.access_token;GD.exp=Date.now()+(r.expires_in||3600)*1000;if(GD.cb)GD.cb(GD.tok)}else gdmsg('Google sign-in failed'+(r&&r.error?': '+r.error:''))},
+error_callback:function(e){if(!GD.silent)gdmsg('Google sign-in was cancelled or blocked'+(e&&e.type?' ('+e.type+')':''))}});
+GD.cb=cb;GD.silent=silent;GD.cl.requestAccessToken({prompt:silent?'none':''})})}
+function gdh(t,x){var h={Authorization:'Bearer '+t};for(var k in x)h[k]=x[k];return h}
+function gdfind(t,cb){fetch('https://www.googleapis.com/drive/v3/files?spaces=appDataFolder&fields=files(id)&q='+encodeURIComponent("name='"+GF+"'"),{headers:gdh(t)})
+.then(function(r){if(!r.ok)throw new Error('Drive error '+r.status);return r.json()}).then(function(o){cb(o.files&&o.files[0]?o.files[0].id:null)}).catch(function(e){gdmsg('Failed: '+e.message)})}
+function gdup(manual){gdtok(!manual,function(t){gdmsg('Backing up...');
+gdfind(t,function(id){var body=JSON.stringify({app:'NomanLifeDesk',saved:Date.now(),data:D}),p;
+if(id)p=fetch('https://www.googleapis.com/upload/drive/v3/files/'+id+'?uploadType=media',{method:'PATCH',headers:gdh(t,{'Content-Type':'application/json'}),body:body});
+else{var bd='nld'+Date.now();p=fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart',{method:'POST',headers:gdh(t,{'Content-Type':'multipart/related; boundary='+bd}),
+body:'--'+bd+'\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n'+JSON.stringify({name:GF,parents:['appDataFolder']})+'\r\n--'+bd+'\r\nContent-Type: application/json\r\n\r\n'+body+'\r\n--'+bd+'--'})}
+p.then(function(r){if(!r.ok)throw new Error('Drive error '+r.status);D.gb=D.gb||{};D.gb.last=Date.now();sv();gdmsg('Backup saved to Google Drive: '+new Date().toLocaleString());if(location.hash=='#/settings')R()}).catch(function(e){gdmsg('Backup failed: '+e.message)})})})}
+function gdrs(){gdtok(false,function(t){gdfind(t,function(id){if(!id){gdmsg('No backup found in your Drive yet.');return}
+fetch('https://www.googleapis.com/drive/v3/files/'+id+'?alt=media',{headers:gdh(t)}).then(function(r){if(!r.ok)throw new Error('Drive error '+r.status);return r.json()}).then(function(o){var d=o&&o.data?o.data:o;
+if(!d||typeof d!='object'||Array.isArray(d))throw new Error('Backup file is invalid');
+if(confirm('Replace ALL current data with the Drive backup from '+(o.saved?new Date(o.saved).toLocaleString():'unknown date')+'?')){try{localStorage.setItem('nld_bak_drive',JSON.stringify(D))}catch(x){}var g=D.gb;D=d;D.v=2;if(g)D.gb=g;sv();ap();R();gdmsg('Restored from Google Drive.')}}).catch(function(e){gdmsg('Restore failed: '+e.message)})})})}
+function gdauto(){var g=D.gb||{};if(g.auto&&GDC.clientId&&Date.now()-(g.last||0)>6*36e5)gdup(0)}
+function drv(){var g=D.gb||{};return'<div class="card"><b>Google Drive backup</b><p class="mu">'+(GDC.clientId?'Your backup is stored in a private hidden folder of your own Google Drive. Only this app can see it. No ads, no third party.':'Drive backup is off. Create a free Google Client ID (see README) and paste it into index.html at GDC.clientId.')+'</p><div class="fm"><button data-a="gup">Backup to Drive now</button><button data-a="grs">Restore from Drive</button><label><input type="checkbox" data-a="gau"'+(g.auto?' checked':'')+'/> Auto backup</label></div><p class="mu">Last Drive backup: '+(g.last?new Date(g.last).toLocaleString():'never')+'. Auto backup runs when you open the app (if the last one is older than 6 hours).</p><p class="mu" id="gdst">'+E(GD.st)+'</p></div><div class="card"><b>Install this app</b><p class="mu">Install it on your phone or PC so it opens like a normal app and works offline.</p><button data-a="inst">Install app</button></div>'}
+document.addEventListener('click',function(e){var a=e.target.getAttribute&&e.target.getAttribute('data-a');if(a=='gup')gdup(1);else if(a=='grs')gdrs();else if(a=='inst'){if(GD.inst){GD.inst.prompt();GD.inst=null}else alert('Use your browser menu: Android Chrome > Install app / Add to Home screen. PC Chrome or Edge > install icon in the address bar. iPhone Safari > Share > Add to Home Screen. (If it is already installed, nothing more is needed.)')}});
+document.addEventListener('change',function(e){var t=e.target;if(t.getAttribute&&t.getAttribute('data-a')=='gau'){D.gb=D.gb||{};D.gb.auto=t.checked?1:0;sv();if(t.checked)gdup(1)}});
+window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();GD.inst=e});
+document.addEventListener('visibilitychange',function(){if(!document.hidden)setTimeout(gdauto,2000)});
+setTimeout(gdauto,5000);
+
+try{if(navigator.storage&&navigator.storage.persist)navigator.storage.persist().then(function(v){PS=v})}catch(e){}
+setInterval(bdg,30000);loadSn();if(!FBC.apiKey)rcv();cinit();
+
+ap();
+clk();setInterval(clk,1000);setInterval(tick,30000);R();bdg();
+})();
+</script>
+<script>
+if('serviceWorker' in navigator&&(location.protocol==='https:'||location.hostname==='localhost')){
+  window.addEventListener('load',function(){navigator.serviceWorker.register('service-worker.js').catch(function(){})});
+}
+</script>
+</body>
+</html>
