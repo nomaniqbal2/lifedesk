@@ -464,7 +464,7 @@ window.addEventListener('hashchange',function(){ov.innerHTML='';bdg()});
 
 /* ===== GOOGLE DRIVE BACKUP (private appDataFolder, no ads) =====
    Paste your Google OAuth Client ID below (see README). Leave empty to keep Drive backup off. */
-var GDC={clientId:'475737279516-5eg4ugt9vmeoagi73083annia22nabf7.apps.googleusercontent.co'};
+var GDC={clientId:'475737279516-5eg4ugt9vmeoagi73083annia22nabf7.apps.googleusercontent.com'};
 var GD={tok:null,exp:0,cl:null,st:'',cb:null,inst:null},GF='nomanlifedesk-backup.json',GS='https://www.googleapis.com/auth/drive.appdata';
 function gdmsg(m){GD.st=m;var e=$('#gdst');if(e)e.textContent=m}
 function gdlib(cb){if(window.google&&google.accounts&&google.accounts.oauth2)return cb();var q=document.createElement('script');q.src='https://accounts.google.com/gsi/client';q.onload=cb;q.onerror=function(){gdmsg('Could not load Google sign-in. Check your internet.')};document.head.appendChild(q)}
