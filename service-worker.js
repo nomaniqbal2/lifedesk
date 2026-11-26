@@ -1,6 +1,6 @@
 /* NomanLifeDesk service worker: offline app shell.
    When you change index.html, bump VERSION (v1 -> v2) so phones pick up the update. */
-const VERSION = 'v1';
+const VERSION = 'v2';
 const CACHE = 'nomanlifedesk-' + VERSION;
 const SHELL = [
   './',
