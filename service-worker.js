@@ -1,6 +1,6 @@
 /* NomanLifeDesk service worker: offline app shell.
    When you change index.html, bump VERSION (v1 -> v2) so phones pick up the update. */
-const VERSION = 'v3';
+const VERSION = 'v5';
 const CACHE = 'nomanlifedesk-' + VERSION;
 const SHELL = [
   './',
@@ -14,7 +14,7 @@ const SHELL = [
 ];
 
 self.addEventListener('install', (e) => {
-  e.waitUntil(caches.open(CACHE).then((c) => c.addAll(SHELL)).then(() => self.skipWaiting()));
+  e.waitUntil(caches.open(CACHE).then((c) => Promise.all(SHELL.map((u) => c.add(u).catch(() => {})))).then(() => self.skipWaiting()));
 });
 
 self.addEventListener('activate', (e) => {
