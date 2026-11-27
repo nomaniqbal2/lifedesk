@@ -468,16 +468,18 @@ window.addEventListener('hashchange',R);
 
 /* ===== CLOUD LOGIN + SYNC (Firebase). Paste your Firebase web config below. Leave apiKey empty to stay local-only. ===== */
 var FBC={apiKey:'',authDomain:'',projectId:'',appId:''},FB={u:null,ok:0,t:null,st:'waiting'};
-function ldfb(cb){if(window.firebase)return cb();var u=['app','auth','firestore'],i=0;(function n(){if(i==3)return cb();var q=document.createElement('script');q.src='https://www.gstatic.com/firebasejs/10.12.2/firebase-'+u[i++]+'-compat.js';q.onload=n;q.onerror=function(){lgn('Could not load the sign-in service. Check your internet and refresh.',1)};document.head.appendChild(q)})()}
+function ldfb(cb){if(window.firebase)return cb();var u=['app','auth','firestore'],i=0;(function n(){if(i==3)return cb();var q=document.createElement('script');q.src='https://www.gstatic.com/firebasejs/10.12.2/firebase-'+u[i++]+'-compat.js';q.onload=n;q.onerror=function(){var g=$('#lg');if(g)g.remove();FB.st='offline (using this device copy)'};document.head.appendChild(q)})()}
 function emp(o){return!Object.keys(o).some(function(k){return Array.isArray(o[k])&&o[k].length})}
 function lsv(){try{var s=JSON.stringify(D);localStorage.setItem('nld',s);idbSet(s)}catch(e){}}
 function lgn(m,nf){var g=$('#lg');if(!g){g=document.createElement('div');g.id='lg';document.body.appendChild(g)}g.innerHTML=nf?'<p class="mu">'+E(m)+'</p>':'<form id="lf"><h1>NomanLifeDesk</h1><p class="mu">Sign in to open your private dashboard</p>'+(m?'<p class="er">'+E(m)+'</p>':'')+'<input name="e" type="email" placeholder="Email" autocomplete="username" required="required"/><input name="p" type="password" placeholder="Password" autocomplete="current-password" required="required"/><button class="btn">Sign in</button></form>'}
 function cst(){return FBC.apiKey?'Cloud sync: '+(FB.u?'signed in as '+E(FB.u.email)+' · '+FB.st:'not signed in'):'Cloud sync is off (data stays only in this browser).'}
 function cpush(f){if(!FB.ok||!FB.r)return;clearTimeout(FB.t);FB.t=setTimeout(function(){var s=JSON.stringify(D);if(s.length>9e5){FB.st='data too large for cloud (remove the profile photo or old data)';return}FB.r.set({d:s,lt:D.lt||Date.now()}).then(function(){FB.st='synced '+new Date().toLocaleTimeString()}).catch(function(e){FB.st='sync failed: '+e.message})},f?0:1200)}
 function cinit(){if(!FBC.apiKey)return;lgn('Loading...',1);ldfb(function(){firebase.initializeApp(FBC);FB.a=firebase.auth();var db=firebase.firestore();FB.a.onAuthStateChanged(function(u){FB.u=u;if(!u){FB.ok=0;if(FB.un){FB.un();FB.un=null}lgn();return}
-var ref=db.collection('users').doc(u.uid);FB.r=ref;ref.get().then(function(s){var cd=null;try{cd=s.exists?JSON.parse(s.data().d):null}catch(e){}
+var ref=db.collection('users').doc(u.uid);FB.r=ref;FB.sf=function(s2){if(s2.metadata.hasPendingWrites||!s2.exists)return;var o;try{o=JSON.parse(s2.data().d)}catch(e){return}
+(function up(){var a=document.activeElement;if(a&&/^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName)){setTimeout(up,3000);return}
+if((o.lt||0)>(D.lt||0)){var gb=D.gb;D=o;D.v=2;if(gb)D.gb=gb;lsv();ap();R();FB.st='synced '+new Date().toLocaleTimeString()}})()};ref.get().then(function(s){var cd=null;try{cd=s.exists?JSON.parse(s.data().d):null}catch(e){}
 if(cd&&(emp(D)||(cd.lt||0)>(D.lt||0))){D=cd;D.v=2;lsv()}FB.ok=1;var g=$('#lg');if(g)g.remove();ap();R();bdg();if(!cd||(D.lt||0)>(cd.lt||0))cpush(1);else FB.st='synced';
-FB.un=ref.onSnapshot(function(s2){if(s2.metadata.hasPendingWrites||!s2.exists)return;try{var o=JSON.parse(s2.data().d);if((o.lt||0)>(D.lt||0)){D=o;lsv();ap();R()}}catch(e){}})}).catch(function(e){lgn('Cloud error: '+e.message)})})})}
+FB.un=ref.onSnapshot(FB.sf)}).catch(function(e){var g=$('#lg');if(g)g.remove();FB.ok=1;FB.st='offline, will sync when internet returns';ap();R();if(!FB.un)FB.un=ref.onSnapshot(FB.sf)})})})}
 document.addEventListener('submit',function(e){if(e.target.id!='lf'||!FB.a)return;e.preventDefault();var f=new FormData(e.target);FB.a.signInWithEmailAndPassword(String(f.get('e')).trim(),String(f.get('p'))).catch(function(x){lgn(/invalid|wrong|not-found/.test(x.code||'')?'Wrong email or password':x.message)})});
 document.addEventListener('click',function(e){var t=e.target;if(!(t.getAttribute&&t.getAttribute('data-a')=='so')||!FB.a||!FB.r)return;if(confirm('Sign out? Your data stays safe in the cloud, and this browser\'s local copy will be cleared.'))FB.r.set({d:JSON.stringify(D),lt:D.lt||Date.now()}).then(function(){try{localStorage.removeItem('nld');localStorage.removeItem('nld_sd')}catch(x){}try{indexedDB.deleteDatabase('nldb')}catch(x){}FB.a.signOut().then(function(){location.reload()})}).catch(function(x){alert('Could not sync to the cloud, so you were not signed out: '+x.message)})});
 var ov=$('#ov'),SN=[],PS=null,FT={d:25,r:0,e:0,l:1500};
@@ -549,6 +551,7 @@ p.then(function(r){if(!r.ok)throw new Error('Drive error '+r.status);return r.js
 function gdsync(manual){if(!manual&&Date.now()-(GD.ls||0)<15000)return;GD.ls=Date.now();
 gdtok(!manual,function(t){gdfind(t,function(id,mt){var g=D.gb=D.gb||{},chg=(D.lt||0)>(g.bt||0);
 if(!id){gdup(1);return}
+if(FBC.apiKey){if(chg)gdup(1);else gdmsg('Drive backup is up to date');return}
 if(mt&&mt===g.rt){if(chg)gdup(1);else gdmsg('Up to date: '+new Date().toLocaleTimeString());return}
 fetch('https://www.googleapis.com/drive/v3/files/'+id+'?alt=media',{headers:gdh(t)}).then(function(r){if(!r.ok)throw new Error('Drive error '+r.status);return r.json()}).then(function(o){
 var d=o&&o.data?o.data:o;if(!d||typeof d!='object'||Array.isArray(d))throw new Error('Backup file is invalid');
