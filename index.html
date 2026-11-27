@@ -467,7 +467,7 @@ document.addEventListener('keydown',function(e){if((e.ctrlKey||e.metaKey)&&e.key
 window.addEventListener('hashchange',R);
 
 /* ===== CLOUD LOGIN + SYNC (Firebase). Paste your Firebase web config below. Leave apiKey empty to stay local-only. ===== */
-var FBC={apiKey:'',authDomain:'',projectId:'',appId:''},FB={u:null,ok:0,t:null,st:'waiting'};
+var FBC={apiKey:'AIzaSyAfKXWq4SpGMUcIz2VQiS0zf5-pzJ2g6XU',authDomain:'lifedesk-a3896.firebaseapp.com',projectId:'lifedesk-a3896',appId:'1:85932622166:web:86dfed271de847cdb7d6f7'},FB={u:null,ok:0,t:null,st:'waiting'};
 function ldfb(cb){if(window.firebase)return cb();var u=['app','auth','firestore'],i=0;(function n(){if(i==3)return cb();var q=document.createElement('script');q.src='https://www.gstatic.com/firebasejs/10.12.2/firebase-'+u[i++]+'-compat.js';q.onload=n;q.onerror=function(){var g=$('#lg');if(g)g.remove();FB.st='offline (using this device copy)'};document.head.appendChild(q)})()}
 function emp(o){return!Object.keys(o).some(function(k){return Array.isArray(o[k])&&o[k].length})}
 function lsv(){try{var s=JSON.stringify(D);localStorage.setItem('nld',s);idbSet(s)}catch(e){}}
