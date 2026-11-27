@@ -538,29 +538,40 @@ callback:function(r){GD.busy=0;if(r&&r.access_token){GD.tok=r.access_token;GD.ex
 error_callback:function(e){GD.busy=0;if(!GD.silent)gdmsg('Google sign-in was cancelled or blocked'+(e&&e.type?' ('+e.type+')':''))}});
 GD.cb=cb;GD.silent=silent;GD.busy=1;setTimeout(function(){GD.busy=0},60000);GD.cl.requestAccessToken({prompt:silent?'none':''})})}
 function gdh(t,x){var h={Authorization:'Bearer '+t};for(var k in x)h[k]=x[k];return h}
-function gdfind(t,cb){fetch('https://www.googleapis.com/drive/v3/files?spaces=appDataFolder&fields=files(id)&q='+encodeURIComponent("name='"+GF+"'"),{headers:gdh(t)})
-.then(function(r){if(!r.ok)throw new Error('Drive error '+r.status);return r.json()}).then(function(o){cb(o.files&&o.files[0]?o.files[0].id:null)}).catch(function(e){gdmsg('Failed: '+e.message)})}
+function gdfind(t,cb){fetch('https://www.googleapis.com/drive/v3/files?spaces=appDataFolder&fields=files(id,modifiedTime)&q='+encodeURIComponent("name='"+GF+"'"),{headers:gdh(t)})
+.then(function(r){if(!r.ok)throw new Error('Drive error '+r.status);return r.json()}).then(function(o){var f=o.files&&o.files[0];cb(f?f.id:null,f?f.modifiedTime:'')}).catch(function(e){gdmsg('Failed: '+e.message)})}
 function gdup(manual){gdtok(!manual,function(t){var snapLt=D.lt||0;gdmsg('Backing up...');
-gdfind(t,function(id){var body=JSON.stringify({app:'NomanLifeDesk',saved:Date.now(),data:D}),p;
-if(id)p=fetch('https://www.googleapis.com/upload/drive/v3/files/'+id+'?uploadType=media',{method:'PATCH',headers:gdh(t,{'Content-Type':'application/json'}),body:body});
-else{var bd='nld'+Date.now();p=fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart',{method:'POST',headers:gdh(t,{'Content-Type':'multipart/related; boundary='+bd}),
+gdfind(t,function(id){var body=JSON.stringify({app:'NomanLifeDesk',saved:Date.now(),data:D}),p,q='fields=id,modifiedTime';
+if(id)p=fetch('https://www.googleapis.com/upload/drive/v3/files/'+id+'?uploadType=media&'+q,{method:'PATCH',headers:gdh(t,{'Content-Type':'application/json'}),body:body});
+else{var bd='nld'+Date.now();p=fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&'+q,{method:'POST',headers:gdh(t,{'Content-Type':'multipart/related; boundary='+bd}),
 body:'--'+bd+'\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n'+JSON.stringify({name:GF,parents:['appDataFolder']})+'\r\n--'+bd+'\r\nContent-Type: application/json\r\n\r\n'+body+'\r\n--'+bd+'--'})}
-p.then(function(r){if(!r.ok)throw new Error('Drive error '+r.status);D.gb=D.gb||{};D.gb.last=Date.now();D.gb.bt=snapLt;GD.pend=0;lsv();gdmsg('Backup saved to Google Drive: '+new Date().toLocaleString());if(location.hash=='#/settings')R()}).catch(function(e){gdmsg('Backup failed: '+e.message)})})})}
+p.then(function(r){if(!r.ok)throw new Error('Drive error '+r.status);return r.json()}).then(function(o){D.gb=D.gb||{};D.gb.last=Date.now();D.gb.bt=snapLt;D.gb.rt=(o&&o.modifiedTime)||'';GD.pend=0;lsv();gdmsg('Synced with Google Drive: '+new Date().toLocaleString());if(location.hash=='#/settings')R()}).catch(function(e){gdmsg('Backup failed: '+e.message)})})})}
+function gdsync(manual){if(!manual&&Date.now()-(GD.ls||0)<15000)return;GD.ls=Date.now();
+gdtok(!manual,function(t){gdfind(t,function(id,mt){var g=D.gb=D.gb||{},chg=(D.lt||0)>(g.bt||0);
+if(!id){gdup(1);return}
+if(mt&&mt===g.rt){if(chg)gdup(1);else gdmsg('Up to date: '+new Date().toLocaleTimeString());return}
+fetch('https://www.googleapis.com/drive/v3/files/'+id+'?alt=media',{headers:gdh(t)}).then(function(r){if(!r.ok)throw new Error('Drive error '+r.status);return r.json()}).then(function(o){
+var d=o&&o.data?o.data:o;if(!d||typeof d!='object'||Array.isArray(d))throw new Error('Backup file is invalid');
+var ae=document.activeElement;if(!manual&&ae&&/^(INPUT|TEXTAREA|SELECT)$/.test(ae.tagName)){GD.ls=0;return}
+var take=true;if(chg&&!emp(D))take=confirm('Is device par aur Drive (doosre device) par dono jagah naye changes hain.\n\nOK = Drive wala version lo (is device ke naye changes chale jayenge)\nCancel = is device ka version rakho aur Drive ko overwrite karo');
+if(take){try{localStorage.setItem('nld_bak_drive',JSON.stringify(D))}catch(x){}var gb=D.gb||{};D=d;D.v=2;D.gb=gb;gb.rt=mt;gb.bt=D.lt||0;gb.last=Date.now();lsv();ap();R();gdmsg('Updated from Drive: '+new Date().toLocaleString())}else gdup(1)
+}).catch(function(e){gdmsg('Sync failed: '+e.message)})})})}
 function gdrs(){gdtok(false,function(t){gdfind(t,function(id){if(!id){gdmsg('No backup found in your Drive yet.');return}
 fetch('https://www.googleapis.com/drive/v3/files/'+id+'?alt=media',{headers:gdh(t)}).then(function(r){if(!r.ok)throw new Error('Drive error '+r.status);return r.json()}).then(function(o){var d=o&&o.data?o.data:o;
 if(!d||typeof d!='object'||Array.isArray(d))throw new Error('Backup file is invalid');
 if(confirm('Replace ALL current data with the Drive backup from '+(o.saved?new Date(o.saved).toLocaleString():'unknown date')+'?')){try{localStorage.setItem('nld_bak_drive',JSON.stringify(D))}catch(x){}var g=D.gb;D=d;D.v=2;if(g)D.gb=g;sv();ap();R();gdmsg('Restored from Google Drive.')}}).catch(function(e){gdmsg('Restore failed: '+e.message)})})})}
 function gdok(){return GD.tok&&Date.now()<GD.exp-60000}
-function gdnow(){var g=D.gb||{};if(!g||!g.auto||!GDC.clientId||GD.busy||!navigator.onLine)return;if((D.lt||0)<=(g.bt||0))return;if(gdok())gdup(0);else GD.pend=1}
+function gdnow(){var g=D.gb||{};if(!g.auto||!GDC.clientId||GD.busy||!navigator.onLine)return;if(gdok())gdsync(0);else GD.pend=1}
 function gdauto(){gdnow()}
 function gdsched(){if(!GD||!(D.gb&&D.gb.auto))return;clearTimeout(GD.dt);GD.dt=setTimeout(gdnow,45000)}
-function drv(){var g=D.gb||{};return'<div class="card"><b>Google Drive backup</b><p class="mu">'+(GDC.clientId?'Your backup is stored in a private hidden folder of your own Google Drive. Only this app can see it. No ads, no third party.':'Drive backup is off. Create a free Google Client ID (see README) and paste it into index.html at GDC.clientId.')+'</p><div class="fm"><button data-a="gup">Backup to Drive now</button><button data-a="grs">Restore from Drive</button><label><input type="checkbox" data-a="gau"'+(g.auto?' checked':'')+'/> Auto backup</label></div><p class="mu">Last Drive backup: '+(g.last?new Date(g.last).toLocaleString():'never')+'. With Auto backup on, every change is saved to Drive by itself (about 45 seconds after you stop editing, when online). If Google asks to sign in again (about once an hour), it happens on your next tap. Offline changes upload when internet returns.</p><p class="mu" id="gdst">'+E(GD.st)+'</p></div><div class="card"><b>Install this app</b><p class="mu">Install it on your phone or PC so it opens like a normal app and works offline.</p><button data-a="inst">Install app</button></div>'}
-document.addEventListener('click',function(e){var a=e.target.getAttribute&&e.target.getAttribute('data-a');if(a=='gup')gdup(1);else if(a=='grs')gdrs();else if(a=='inst'){if(GD.inst){GD.inst.prompt();GD.inst=null}else alert('Use your browser menu: Android Chrome > Install app / Add to Home screen. PC Chrome or Edge > install icon in the address bar. iPhone Safari > Share > Add to Home Screen. (If it is already installed, nothing more is needed.)')}});
-document.addEventListener('change',function(e){var t=e.target;if(t.getAttribute&&t.getAttribute('data-a')=='gau'){D.gb=D.gb||{};D.gb.auto=t.checked?1:0;sv();if(t.checked)gdup(1)}});
+function drv(){var g=D.gb||{};return'<div class="card"><b>Google Drive backup</b><p class="mu">'+(GDC.clientId?'Your backup is stored in a private hidden folder of your own Google Drive. Only this app can see it. No ads, no third party.':'Drive backup is off. Create a free Google Client ID (see README) and paste it into index.html at GDC.clientId.')+'</p><div class="fm"><button data-a="gup">Sync with Drive now</button><button data-a="grs">Restore from Drive</button><label><input type="checkbox" data-a="gau"'+(g.auto?' checked':'')+'/> Auto backup</label></div><p class="mu">Last Drive backup: '+(g.last?new Date(g.last).toLocaleString():'never')+'. Use the SAME Google account on every device and turn Auto backup on in each. Changes go to Drive about 45 seconds after you stop editing, and the other device picks them up within a couple of minutes while its app is open. If Google asks to sign in again (about once an hour), it happens on your next tap. Offline changes upload when internet returns.</p><p class="mu" id="gdst">'+E(GD.st)+'</p></div><div class="card"><b>Install this app</b><p class="mu">Install it on your phone or PC so it opens like a normal app and works offline.</p><button data-a="inst">Install app</button></div>'}
+document.addEventListener('click',function(e){var a=e.target.getAttribute&&e.target.getAttribute('data-a');if(a=='gup')gdsync(1);else if(a=='grs')gdrs();else if(a=='inst'){if(GD.inst){GD.inst.prompt();GD.inst=null}else alert('Use your browser menu: Android Chrome > Install app / Add to Home screen. PC Chrome or Edge > install icon in the address bar. iPhone Safari > Share > Add to Home Screen. (If it is already installed, nothing more is needed.)')}});
+document.addEventListener('change',function(e){var t=e.target;if(t.getAttribute&&t.getAttribute('data-a')=='gau'){D.gb=D.gb||{};D.gb.auto=t.checked?1:0;sv();if(t.checked)gdsync(1)}});
 window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();GD.inst=e});
 document.addEventListener('visibilitychange',function(){if(!document.hidden)setTimeout(gdauto,2000)});
 window.addEventListener('online',function(){setTimeout(gdauto,1500)});
-document.addEventListener('click',function(){var g=D.gb||{};if(!GD.pend||!g.auto||GD.busy||!navigator.onLine)return;var n=Date.now(),t=0;try{t=+localStorage.getItem('nld_gtry')||0}catch(x){}if(n-t<6e5)return;try{localStorage.setItem('nld_gtry',String(n))}catch(x){}gdup(1)},true);
+document.addEventListener('click',function(){var g=D.gb||{};if(!GD.pend||!g.auto||GD.busy||!navigator.onLine)return;var n=Date.now(),t=0;try{t=+localStorage.getItem('nld_gtry')||0}catch(x){}if(n-t<6e5)return;try{localStorage.setItem('nld_gtry',String(n))}catch(x){}gdsync(1)},true);
+setInterval(function(){if(!document.hidden)gdnow()},120000);
 setTimeout(gdauto,5000);
 
 try{if(navigator.storage&&navigator.storage.persist)navigator.storage.persist().then(function(v){PS=v})}catch(e){}
