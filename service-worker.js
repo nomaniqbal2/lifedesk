@@ -1,6 +1,6 @@
 /* NomanLifeDesk service worker: offline app shell.
    When you change index.html, bump VERSION (v1 -> v2) so phones pick up the update. */
-const VERSION = 'v7';
+const VERSION = 'v8';
 const CACHE = 'nomanlifedesk-' + VERSION;
 const SHELL = [
   './',
@@ -34,6 +34,23 @@ self.addEventListener('fetch', (e) => {
   const isFb = url.hostname === 'www.gstatic.com' && url.pathname.indexOf('/firebasejs/') === 0;
   // Google Drive / sign-in / any other network call is never touched.
   if (!sameOrigin && !isFont && !isFb) return;
+
+  // App page: try the network first (so updates show immediately), fall back to the offline copy.
+  if (sameOrigin && (req.mode === 'navigate' || /\/(index\.html)?$/.test(url.pathname))) {
+    e.respondWith(
+      caches.open(CACHE).then(async (cache) => {
+        try {
+          const res = await Promise.race([
+            fetch(req, { cache: 'no-cache' }),
+            new Promise((_, rej) => setTimeout(() => rej(new Error('slow')), 4000))
+          ]);
+          if (res && res.ok) { cache.put('./index.html', res.clone()); return res; }
+        } catch (err) {}
+        return (await cache.match('./index.html')) || (await cache.match('./')) || new Response('Offline', { status: 504 });
+      })
+    );
+    return;
+  }
 
   e.respondWith(
     caches.open(CACHE).then(async (cache) => {
