@@ -1,6 +1,6 @@
 /* NomanLifeDesk service worker: offline app shell.
    When you change index.html, bump VERSION (v1 -> v2) so phones pick up the update. */
-const VERSION = 'v5';
+const VERSION = 'v7';
 const CACHE = 'nomanlifedesk-' + VERSION;
 const SHELL = [
   './',
@@ -31,8 +31,9 @@ self.addEventListener('fetch', (e) => {
   const url = new URL(req.url);
   const sameOrigin = url.origin === self.location.origin;
   const isFont = url.hostname === 'fonts.googleapis.com' || url.hostname === 'fonts.gstatic.com';
+  const isFb = url.hostname === 'www.gstatic.com' && url.pathname.indexOf('/firebasejs/') === 0;
   // Google Drive / sign-in / any other network call is never touched.
-  if (!sameOrigin && !isFont) return;
+  if (!sameOrigin && !isFont && !isFb) return;
 
   e.respondWith(
     caches.open(CACHE).then(async (cache) => {
